@@ -70,7 +70,7 @@ router.post('/login', (req, res, next) => {
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if(err) {
                     return res.status(401).json({
-                        message: 'Authentication failed!'
+                        message: 'User name or password incorrect!'
                     });
                 } if(result) {
                     const token = jwt.sign({
@@ -89,13 +89,13 @@ router.post('/login', (req, res, next) => {
                     });
                 } 
                 res.status(401).json({
-                    message: 'Authentication failed!'
+                    message: 'User name or password incorrect!'
                 });
             });
         })
-        .catch(err => {
+    .catch(err => {
             res.status(500).json({
-                message: err
+                message: 'The server error!' + err
             });
         });
 });

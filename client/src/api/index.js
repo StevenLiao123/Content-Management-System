@@ -8,4 +8,4 @@ import ajax from './ajax';
 export const reqLogin = (username, password) => ajax('/user/login', {username, password}, 'POST');
 
 // Add an user
-export const addUser = (user) => ajax('/user/register', user, 'POST');
+//export const addUser = (user) => ajax('/user/register', user, 'POST');

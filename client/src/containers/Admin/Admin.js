@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+
+import memoryUtils from '../../utils/memoryUtils';
 
 // asdasdas
-export default class Admin extends Component {
-    fetchData = () => {
-        fetch('http://localhost:4000/user/')
-            .then((res) => {
-                console.log(res.json());
-            })
-    };
-
+class Admin extends Component {
     render() {
-        const fetchData = this.fetchData();
+        const user = memoryUtils.user;
+        // if memory doesn't have user just redirect to login page.
+        if(!user[0] || !user[0]._id) {
+            return <Redirect to='/login' />
+        }
         return <div>
-            <button onClick={fetchData}>click me!</button>
+            <p>Hello {user[0].username}</p>
         </div>;
     }
 }
+
+export default Admin;

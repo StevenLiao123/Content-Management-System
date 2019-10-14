@@ -1,27 +1,27 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, message } from 'antd';
 import { reqLogin } from '../../api';
+import memoryUtils from '../../utils/memoryUtils';
 
 import './login.less';
 import logo from './images/logo.jpeg';
 
 class Login extends Component {
+
     handleSubmit = e => {
         // the default action that belongs to the event will be cancelled !! sd sadasd
         e.preventDefault();
         // validate the value from input
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFields(async (err, values) => {
             if (!err) {
                 //console.log('Submit success!', values);
-                const {username, password} = values;
-                reqLogin(username, password)
-                    .then(response => {
-                        console.log('Login successful!', response.data);
-                        this.props.history.push('/', {username});
-                    })
-                    .catch(error => {
-                        alert('Login failed!', error);
-                    });
+                const { username, password } = values;
+                const response = await reqLogin(username, password);
+                message.success('Login successful!');
+                // save data in memory
+                const user = response.data;
+                memoryUtils.user = user;
+                this.props.history.replace('/');              
             } else {
                 console.log('Submit is failed!');
             }
@@ -31,13 +31,13 @@ class Login extends Component {
     // custom validation for password
     validatePassword = (rule, value, callback) => {
         console.log('validatePassword', rule, value);
-        if(!value) {
+        if (!value) {
             callback('Please input your password!');
-        } else if(value.length < 4) {
+        } else if (value.length < 4) {
             callback('Please input at least 4 characters!');
-        } else if(value.length > 12) {
+        } else if (value.length > 12) {
             callback('Please do not input more than 12 characters!');
-        } else if(!/^[a-zA-Z0-9_]+$/.test(value)) {
+        } else if (!/^[a-zA-Z0-9_]+$/.test(value)) {
             callback('Please includes english and numbers!');
         } else {
             callback();
@@ -64,25 +64,25 @@ class Login extends Component {
                                 */
                             }
                             {getFieldDecorator('username', {
-                                rules:[
-                                    { 
-                                        required: true, 
+                                rules: [
+                                    {
+                                        required: true,
                                         whitespace: true,
                                         message: 'Please input your username!'
                                     },
-                                    { 
-                                        min: 4, 
+                                    {
+                                        min: 4,
                                         message: 'Please input at least 4 characters!'
                                     },
-                                    { 
-                                        max: 12, 
+                                    {
+                                        max: 12,
                                         message: 'Please do not input more than 12 characters!'
                                     },
-                                    { 
-                                        pattern: /^[a-zA-Z0-9_]+$/, 
+                                    {
+                                        pattern: /^[a-zA-Z0-9_]+$/,
                                         message: 'Please includes english and numbers!'
-                                    },                              
-                                ],    
+                                    },
+                                ],
                             })(<Input
                                 prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 placeholder="Username"
@@ -91,10 +91,10 @@ class Login extends Component {
                         </Form.Item>
                         <Form.Item>
                             {getFieldDecorator('password', {
-                                rules:[
-                                {
-                                    validator: this.validatePassword
-                                }],
+                                rules: [
+                                    {
+                                        validator: this.validatePassword
+                                    }],
                             })(<Input
                                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 type="password"
