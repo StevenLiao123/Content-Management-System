@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, message } from 'antd';
+import { Redirect } from 'react-router-dom';
 import { reqLogin } from '../../api';
 import memoryUtils from '../../utils/memoryUtils';
+import storageUtils from '../../utils/storageUtils';
 
 import './login.less';
-import logo from './images/logo.jpeg';
+import logo from '../../assets/images/logo.jpeg';
 
 class Login extends Component {
 
@@ -20,7 +22,8 @@ class Login extends Component {
                 message.success('Login successful!');
                 // save data in memory
                 const user = response.data;
-                memoryUtils.user = user;
+                memoryUtils.user = user; // save user in the memory
+                storageUtils.saveUser(user); // save user in the local storage
                 this.props.history.replace('/');              
             } else {
                 console.log('Submit is failed!');
@@ -45,6 +48,12 @@ class Login extends Component {
     }
 
     render() {
+        // jump into the managment page if the user has already been signed in 
+        const user = memoryUtils.user;
+        if(user[0]) {
+            return <Redirect to='/' />;
+        }
+        // get form object 
         const form = this.props.form;
         const { getFieldDecorator } = form;
 

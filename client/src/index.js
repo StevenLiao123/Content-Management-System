@@ -4,6 +4,11 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
+import memoryUtils from './utils/memoryUtils';
+import storageUtils from './utils/storageUtils';
+
+const user = storageUtils.getUser();
+memoryUtils.user = user;
 
 ReactDOM.render(
     <BrowserRouter>
