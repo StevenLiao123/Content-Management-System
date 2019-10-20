@@ -11,7 +11,7 @@ import logo from '../../assets/images/logo.jpeg';
 class Login extends Component {
 
     handleSubmit = e => {
-        // the default action that belongs to the event will be cancelled !! sd sadasd
+        // the default action that belongs to the event will be cancelled !! 
         e.preventDefault();
         // validate the value from input
         this.props.form.validateFields(async (err, values) => {

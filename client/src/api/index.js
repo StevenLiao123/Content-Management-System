@@ -1,11 +1,37 @@
 /*
     This module is providing API functions for different requests.
 */
-
+import jsonp from 'jsonp';
 import ajax from './ajax';
+import { message } from 'antd';
 
 // Login
-export const reqLogin = (username, password) => ajax('/user/login', {username, password}, 'POST');
+export const reqLogin = (username, password) => ajax('/user/login', { username, password }, 'POST');
+
+// jsonp request for weather
+export const reqWeather = (city) => {
+
+    return new Promise((resolve, reject) => {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=5481d01e1f55fc521a219134e8545e8e`;
+
+        // execute jsonp request
+        jsonp(url, {}, (error, data) => {
+            console.log('jsonp', error, data);
+            if (!error) {
+                // get the name, icon and description from openWeather API
+                const name = data.name;
+                const icon = data.weather[0].icon;
+                const temp = data.main.temp;
+                resolve({ name, temp, icon } );
+                console.log('jsonp', name, temp, icon);
+            } else {
+                message.error('Get weather API Failed!');
+            }
+        });
+    });
+}
 
 // Add an user
 //export const addUser = (user) => ajax('/user/register', user, 'POST');
+
+reqWeather('Sydney');

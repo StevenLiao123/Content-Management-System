@@ -17,5 +17,4 @@ describe('<Admin />', () => {
     it('should render login' , () => {
         expect(warpper.find('Redirect')).toHaveLength(1);
     });
-
 });

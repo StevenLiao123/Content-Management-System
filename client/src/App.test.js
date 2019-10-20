@@ -6,6 +6,7 @@ import EnzymeAdapter from 'enzyme-adapter-react-16';
 configure({
     adapter: new EnzymeAdapter()
 });
+
 describe('<App />', () => {
     it('renders 1 <App /> component', () => {
         const component = shallow(<App />);

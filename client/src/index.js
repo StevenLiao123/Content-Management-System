@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import memoryUtils from './utils/memoryUtils';
 import storageUtils from './utils/storageUtils';
 
+
 const user = storageUtils.getUser();
 memoryUtils.user = user;
 
