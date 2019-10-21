@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Form, Icon, Input, Button, message } from 'antd';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { reqLogin } from '../../api';
+import LinkButton from '../../components/link-button';
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
 
@@ -45,6 +46,10 @@ class Login extends Component {
         } else {
             callback();
         }
+    }
+
+    toSignup = () => {
+        this.props.history.push('/signup');
     }
 
     render() {
@@ -114,6 +119,7 @@ class Login extends Component {
                             <Button type="primary" htmlType="submit" className="login-form-button">
                                 Log in
                             </Button>
+                            Or <LinkButton onClick={this.toSignup}>register now!</LinkButton>
                         </Form.Item>
                     </Form>
                 </section>
@@ -124,4 +130,4 @@ class Login extends Component {
 
 //Form.create()() is a higher order function(HOF) and WrappedLogin is a higher order component(HOC)
 const WrappedLogin = Form.create()(Login);
-export default WrappedLogin;
+export default withRouter(WrappedLogin);

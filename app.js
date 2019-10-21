@@ -9,15 +9,21 @@ require('dotenv/config');
 app.use(cors());
 app.use(bodyParser.json());
 
+// get the route of user
 const userRoute = require('./routes/user');
-
 app.use('/user', userRoute);
+
+// get the route of category
+const categoryRoute = require('./routes/category');
+app.use('/category', categoryRoute);
 
 //Connect to DB
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect(process.env.DB_CONNECTION,
     { useNewUrlParser: true },
-    () => console.log('Connected to Mongo DB')
+    () => {
+        console.log('MongoDB created!!');
+    }
 );
 
 

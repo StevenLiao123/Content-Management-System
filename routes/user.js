@@ -21,7 +21,7 @@ router.get('/specific', (req, res) => {
 */
 
 // Create a new user
-router.post('/register', (req, res, next) => {
+router.post('/signup', (req, res, next) => {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
         User.find({ username: req.body.username}).then(user => {
             if(user.length >= 1) {

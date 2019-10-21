@@ -8,6 +8,10 @@ import { message } from 'antd';
 // Login
 export const reqLogin = (username, password) => ajax('/user/login', { username, password }, 'POST');
 
+// Sign up
+export const reqSignup = (username, password, email) => ajax('/user/signup', { username, password, email }, 'POST');
+
+
 // jsonp request for weather
 export const reqWeather = (city) => {
 
