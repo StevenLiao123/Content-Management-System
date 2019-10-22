@@ -2,19 +2,30 @@ const express = require('express');
 const router = express.Router();
 const Category = require('../models/category');
 
-// get back the categories
+// get back all categories
 router.get('/', async (req, res) => {
     try {
-        const categories = await Category.find();
-        res.json(categories);
+        const allCategories = await Category.find();
+        res.json(allCategories);
     } catch (err) {
         res.json({ message: err });
     }
 });
 
+// get a list of categories based on the parentId
+router.post('/list', async (req, res) => {
+    try {
+        const categoriesByParentId = await Category.find({ parentId: req.body.parentId });
+        res.json(categoriesByParentId);
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
+
+
 // Create a new category
 router.post('/add', (req, res, next) => {
-    Category.find({ name: req.body.name}).then(category => {
+    Category.find({ categoryName: req.body.categoryName }).then(category => {
             if(category.length >= 1) {
                 return res.status(409).json({
                     message: 'This category has already been added!'
@@ -22,7 +33,7 @@ router.post('/add', (req, res, next) => {
             } else {
                     const category = new Category({
                         parentId: req.body.parentId,
-                        name: req.body.name,
+                        categoryName: req.body.categoryName,
                     });
                     
                     category.save()
@@ -45,9 +56,9 @@ router.post('/add', (req, res, next) => {
 });
 
 // delete a category
-router.delete('/:name', async (req, res) => {
+router.delete('/:categoryName', async (req, res) => {
     try {
-        const removeCategory = await Category.deleteOne({ name: req.params.name });
+        const removeCategory = await Category.deleteOne({ categoryName: req.params.categoryName });
         res.json({
             message: 'Category deleted!',
             removeCategory
@@ -59,16 +70,18 @@ router.delete('/:name', async (req, res) => {
 });
 
 // update a category
-router.patch('/:name', async (req, res) => {
-    try {
-        const updateCategory = await User.updateOne(
-            { name: req.params.name },
-        );
-        res.json(updateCategory);
-
-    } catch (err) {
-        res.json({ message: err });
-    }
+router.post('/update', (req, res, next) => {
+    Category.find({ _id: req.body._id }, async () => {
+        try {
+            const updateCategory = await Category.updateOne(
+                { categoryName: req.body.categoryName },
+            );
+            res.json(updateCategory);
+    
+        } catch (err) {
+            res.json({ message: err });
+        }
+    });
 });
 
 module.exports = router;

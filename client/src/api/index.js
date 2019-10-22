@@ -5,11 +5,22 @@ import jsonp from 'jsonp';
 import ajax from './ajax';
 import { message } from 'antd';
 
+const BASE = "http://localhost:4000";
+
 // Login
 export const reqLogin = (username, password) => ajax('/user/login', { username, password }, 'POST');
 
 // Sign up
 export const reqSignup = (username, password, email) => ajax('/user/signup', { username, password, email }, 'POST');
+
+// get a list of categories based on the parentId
+export const reqCategories = (parentId) => ajax(BASE + '/category/list', {parentId}, 'POST');
+
+// Add a category
+export const reqAddCategory = (categoryName, parentId) => ajax(BASE + '/category/add', {categoryName, parentId}, 'POST');
+
+// Update a category
+export const reqUpdateCategory = (_id, categoryName) => ajax(BASE + '/category/update', {_id, categoryName}, 'POST');
 
 
 // jsonp request for weather
@@ -35,7 +46,7 @@ export const reqWeather = (city) => {
     });
 }
 
+reqWeather('Sydney');
+
 // Add an user
 //export const addUser = (user) => ajax('/user/register', user, 'POST');
-
-reqWeather('Sydney');
