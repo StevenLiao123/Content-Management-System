@@ -25,7 +25,7 @@ router.post('/list', async (req, res) => {
 
 // Create a new category
 router.post('/add', (req, res, next) => {
-    Category.find({ categoryName: req.body.categoryName }).then(category => {
+    Category.find({ name: req.body.name }).then(category => {
             if(category.length >= 1) {
                 return res.status(409).json({
                     message: 'This category has already been added!'
@@ -33,7 +33,7 @@ router.post('/add', (req, res, next) => {
             } else {
                     const category = new Category({
                         parentId: req.body.parentId,
-                        categoryName: req.body.categoryName,
+                        name: req.body.name,
                     });
                     
                     category.save()
@@ -56,9 +56,9 @@ router.post('/add', (req, res, next) => {
 });
 
 // delete a category
-router.delete('/:categoryName', async (req, res) => {
+router.delete('/:name', async (req, res) => {
     try {
-        const removeCategory = await Category.deleteOne({ categoryName: req.params.categoryName });
+        const removeCategory = await Category.deleteOne({ name: req.params.name });
         res.json({
             message: 'Category deleted!',
             removeCategory
@@ -74,7 +74,7 @@ router.post('/update', (req, res, next) => {
     Category.find({ _id: req.body._id }, async () => {
         try {
             const updateCategory = await Category.updateOne(
-                { categoryName: req.body.categoryName },
+                { name: req.body.name },
             );
             res.json(updateCategory);
     

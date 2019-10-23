@@ -17,10 +17,10 @@ export const reqSignup = (username, password, email) => ajax('/user/signup', { u
 export const reqCategories = (parentId) => ajax(BASE + '/category/list', {parentId}, 'POST');
 
 // Add a category
-export const reqAddCategory = (categoryName, parentId) => ajax(BASE + '/category/add', {categoryName, parentId}, 'POST');
+export const reqAddCategory = (name, parentId) => ajax(BASE + '/category/add', {name, parentId}, 'POST');
 
 // Update a category
-export const reqUpdateCategory = (_id, categoryName) => ajax(BASE + '/category/update', {_id, categoryName}, 'POST');
+export const reqUpdateCategory = (_id, name) => ajax(BASE + '/category/update', {_id, name}, 'POST');
 
 
 // jsonp request for weather

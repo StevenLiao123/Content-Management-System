@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import { Card, Table, Button, Icon } from 'antd';
+import { Card, Table, Button, Icon, message, Modal } from 'antd';
 
 import LinkButton from '../../components/link-button';
 import { reqCategories } from '../../api';
+import AddForm from './add-form';
+import UpdateForm from './update-form';
 
 export default class Category extends Component {
 
     state = {
         categories: [], // first level category
+        subCategories: [],
         loading: false, // used to determine whether it is in the process of getting data
+        parentId: 'a', // the parent Id of the first level category
+        parentName: '', // the name of the first level category
+        showModalStatus: 0, // the status of modal, 0: both are hidden, 1: show add modal, 2: show update modal
     }
 
     // initiate the column of table 
@@ -21,31 +27,96 @@ export default class Category extends Component {
             {
                 title: 'Action',
                 width: 300,
-                render: () => ( // return the tags for actions
+                render: (category) => ( // return the tags for actions
                     <span>
-                        <LinkButton>Edit</LinkButton>
-                        <LinkButton>Check sub-categories</LinkButton>
+                        <LinkButton onClick={this.showUpdateModal}>Edit</LinkButton>
+                        {this.state.parentId === 'a' ? <LinkButton onClick={() => this.showSubCategories(category)}>Check sub-categories</LinkButton> : null}
                     </span>
                 )
             },
         ]
     }
 
-    // get a list of the first level category by ajax 
+    // get a list of categories by ajax 
     getCategories = async () => {
         // show loading before send the request
         this.setState({ loading: true });
+        const { parentId } = this.state;
 
-        const categories = await reqCategories("0");
+        const categories = await reqCategories(parentId);
 
         this.setState({ loading: false });
 
-        if(categories) {
-            this.setState({
-                categories
-            });
+        if (categories) {
+            if (parentId === 'a') {
+                this.setState({
+                    categories
+                });
+            } else {
+                this.setState({
+                    subCategories: categories
+                });
+            }
+
+        } else {
+            message.error('failed to get category!');
         }
-       
+
+    }
+
+    // show the sub categories based on the parent category
+    showSubCategories = (category) => {
+        // update the state 
+        // * setState() is an asynchrnous update now, so we have to put getCategories() in callback so that we can get the new parentId!
+        this.setState({
+            parentId: category._id,
+            parentName: category.name
+        }, () => {
+            // get the sub categories
+            this.getCategories();
+        });
+    }
+
+    // show the parent categories
+    showCategories = () => {
+        // set the states for showing the parent categories
+        this.setState({
+            parentId: 'a',
+            parentName: '',
+            subCategories: []
+        });
+    }
+
+    // show the add modal
+    showAddModal = () => {
+        this.setState({
+            showModalStatus: 1
+        });
+    }
+
+    // show the update modal
+    showUpdateModal = () => {
+        this.setState({
+            showModalStatus: 2
+        });
+    }
+
+    // add a category
+    addCategory = () => {
+        console.log('addCategory');
+    }
+
+    // update a category
+    updateCategory = () => {
+        console.log('updateCategory');
+    }
+
+
+    // hide the modal
+    handleCancel = () => {
+        this.setState({
+            showModalStatus: 0
+        });
     }
 
     // used to load data before the first render
@@ -60,46 +131,24 @@ export default class Category extends Component {
 
     render() {
 
-        const { categories, loading } = this.state;
+        const { categories, subCategories, parentId, parentName, loading, showModalStatus } = this.state;
 
         // setup the left side of card
-        const title = "Product's categories";
+        const title = parentId === 'a' ? "Product's categories" : (
+            <span>
+                <LinkButton onClick={this.showCategories}>Product's categories</LinkButton>
+                <Icon type='arrow-right' style={{ marginRight: 5 }} />
+                <span>{parentName}</span>
+            </span>
+        );
 
         // setup the right side of card
         const extra = (
-            <Button type="primary">
+            <Button type="primary" onClick={this.showAddModal}>
                 <Icon type="plus" />
                 Add
             </Button>
         );
-
-        const dataSource = [
-            {
-                "_id": "5dad4a88fd19020bd325914b",
-                "parentId": 0,
-                "name": "Household Appliances",
-                "__v": 0
-            },
-            {
-                "_id": "5dad4fa6a53d070c44054b76",
-                "parentId": 0,
-                "name": "Books",
-                "__v": 0
-            },
-            {
-                "_id": "5dad5083a53d070c44054b77",
-                "parentId": 0,
-                "name": "Computers",
-                "__v": 0
-            },
-            {
-                "_id": "5dad5098a53d070c44054b78",
-                "parentId": 0,
-                "name": "Foods",
-                "__v": 0
-            }
-        ];
-
 
         return (
             <Card title={title} extra={extra} >
@@ -107,10 +156,28 @@ export default class Category extends Component {
                     bordered
                     rowKey='_id'
                     loading={loading}
-                    dataSource={categories}
+                    dataSource={parentId === 'a' ? categories : subCategories}
                     columns={this.columns}
                     pagination={{ defaultPageSize: 6, showQuickJumper: true }}
                 />
+
+                <Modal
+                    title="Add a Category"
+                    visible={showModalStatus === 1}
+                    onOk={this.addCategory}
+                    onCancel={this.handleCancel}
+                >
+                    <AddForm />
+                </Modal>
+
+                <Modal
+                    title="Update a category"
+                    visible={showModalStatus === 2}
+                    onOk={this.updateCategory}
+                    onCancel={this.handleCancel}
+                >
+                    <UpdateForm />
+                </Modal>
             </Card>
         )
     }
