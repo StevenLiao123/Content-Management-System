@@ -31,8 +31,6 @@ mongoose.connect( process.env.MONGODB_URI || process.env.DB_CONNECTION,
     }
 );
 
-//
-
 if(process.env.NODE_ENV === 'production') {
     app.use(express.static( 'client/build' ));
 
