@@ -64,13 +64,13 @@ router.post('/login', (req, res, next) => {
         .then(user => {
             if( user.length < 1 ) {
                 return res.status(401).json({
-                    message: 'Authentication failed!'
+                    message: 'Authentication failed! [0]'
                 });
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if(err) {
                     return res.status(401).json({
-                        message: 'User name or password incorrect!'
+                        message: 'User name or password incorrect! [1]'
                     });
                 } if(result) {
                     const token = jwt.sign({
@@ -89,7 +89,7 @@ router.post('/login', (req, res, next) => {
                     });
                 } 
                 res.status(401).json({
-                    message: 'User name or password incorrect!'
+                    message: 'User name or password incorrect! [2]'
                 });
             });
         })
