@@ -5,7 +5,7 @@ import jsonp from 'jsonp';
 import ajax from './ajax';
 import { message } from 'antd';
 
-const BASE = "http://localhost:8080";
+const BASE = "https://floating-beyond-26711.herokuapp.com";
 
 // Login
 export const reqLogin = (username, password) => ajax('/user/login', { username, password }, 'POST');
