@@ -119,17 +119,22 @@ export default class Category extends Component {
             showModalStatus: 0
         });
 
+        // get the values for updating a category
         const _id = this.category._id;
         const name = this.form.getFieldValue('name');
         console.log(_id, name);
 
         // update the category by ajax
         const result = await reqUpdateCategory({_id, name});
+
         // show the new list
         if(result) {
             console.log('result: ', result);
             this.getCategories();
         }
+
+        // clear the incoming values
+        this.form.resetFields();
     }
 
 
@@ -138,6 +143,9 @@ export default class Category extends Component {
         this.setState({
             showModalStatus: 0
         });
+
+        // clear the incoming values
+        this.form.resetFields();
     }
 
     // used to load data before the first render
