@@ -74,7 +74,8 @@ router.post('/update', (req, res, next) => {
     Category.find({ _id: req.body._id }, async () => {
         try {
             const updateCategory = await Category.updateOne(
-                { name: req.body.name },
+                { _id: req.body._id}, 
+                {"$set": { name: req.body.name }}
             );
             res.json({message:'Update sccuessful!', updateCategory});
 
