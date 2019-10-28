@@ -29,7 +29,7 @@ export default class Category extends Component {
                 width: 300,
                 render: (category) => ( // return the tags for actions
                     <span>
-                        <LinkButton onClick={this.showUpdateModal}>Edit</LinkButton>
+                        <LinkButton onClick={() => this.showUpdateModal(category)}>Edit</LinkButton>
                         {this.state.parentId === 'a' ? <LinkButton onClick={() => this.showSubCategories(category)}>Check sub-categories</LinkButton> : null}
                     </span>
                 )
@@ -95,7 +95,11 @@ export default class Category extends Component {
     }
 
     // show the update modal
-    showUpdateModal = () => {
+    showUpdateModal = (category) => {
+        // save a object of the category 
+        this.category = category;
+
+        // update the state
         this.setState({
             showModalStatus: 2
         });
@@ -130,8 +134,11 @@ export default class Category extends Component {
     }
 
     render() {
-
+        // get the state
         const { categories, subCategories, parentId, parentName, loading, showModalStatus } = this.state;
+
+        // get the specific category
+        const category = this.category || {};
 
         // setup the left side of card
         const title = parentId === 'a' ? "Product's categories" : (
@@ -176,7 +183,7 @@ export default class Category extends Component {
                     onOk={this.updateCategory}
                     onCancel={this.handleCancel}
                 >
-                    <UpdateForm />
+                    <UpdateForm categoryName={category.name} />
                 </Modal>
             </Card>
         )

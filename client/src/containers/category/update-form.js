@@ -1,22 +1,26 @@
 import React, { Component } from 'react';
 import { Form, Input } from 'antd';
+import Proptypes from 'prop-types';
 
 
 // the form for updating a category
 class UpdateForm extends Component {
+    static propTypes = {
+        categoryName: Proptypes.string.isRequired
+    };
 
     render() {
+        const { categoryName } = this.props;
         const { getFieldDecorator } = this.props.form;
-
 
         return (
             <Form>
                 <Form.Item>
                     {
                         getFieldDecorator('name', {
-                            initialValue: ''
+                            initialValue: categoryName
                         })(
-                            <Input placeholder='Please input a name of category' />
+                            <Input placeholder={'Please input a name of category'} />
                         )
                     }
                 </Form.Item>
