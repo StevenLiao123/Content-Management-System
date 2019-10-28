@@ -76,7 +76,7 @@ router.post('/update', (req, res, next) => {
             const updateCategory = await Category.updateOne(
                 { name: req.body.name },
             );
-            res.json(updateCategory);
+            res.json('Update sccuessful!', updateCategory);
     
         } catch (err) {
             res.json({ message: err });

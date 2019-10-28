@@ -124,8 +124,9 @@ export default class Category extends Component {
 
         // update the category by ajax
         const result = await reqUpdateCategory({ _id, name });
-        if (result) {
+        if (result.name) {
             // show the new list 
+            console.log('name', result.name);
             this.getCategories();
         }
     }
