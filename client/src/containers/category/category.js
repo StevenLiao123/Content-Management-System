@@ -200,7 +200,7 @@ export default class Category extends Component {
                 >
                     <UpdateForm 
                         categoryName={category.name} 
-                        setForm={(form) => {this.form}}
+                        setForm={(form) => {this.form = form}}
                     />
                 </Modal>
             </Card>
