@@ -6,8 +6,14 @@ import Proptypes from 'prop-types';
 // the form for updating a category
 class UpdateForm extends Component {
     static propTypes = {
-        categoryName: Proptypes.string.isRequired
+        categoryName: Proptypes.string.isRequired,
+        setForm: Proptypes.func.isRequired
     };
+
+    componentWillMount() {
+        // pass the form to the parent component by invoking the setForm()
+        this.props.setForm(this.props.form);
+    }
 
     render() {
         const { categoryName } = this.props;
