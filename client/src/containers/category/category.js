@@ -120,11 +120,11 @@ export default class Category extends Component {
         });
 
         const _id = this.category._id;
-        const updateName = this.form.getFieldValue('name');
-        console.log(_id, updateName);
+        const name = this.form.getFieldValue('name');
+        console.log(_id, name);
 
         // update the category by ajax
-        const result = await reqUpdateCategory({_id, updateName});
+        const result = await reqUpdateCategory({_id, name});
         // show the new list
         if(result === true) {
             this.getCategories();
