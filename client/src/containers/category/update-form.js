@@ -16,7 +16,7 @@ class UpdateForm extends Component {
     }
 
     render() {
-        const { categoryName } = this.props;
+        const { name } = this.props;
         const { getFieldDecorator } = this.props.form;
 
         return (
@@ -24,7 +24,7 @@ class UpdateForm extends Component {
                 <Form.Item>
                     {
                         getFieldDecorator('name', {
-                            initialValue: categoryName
+                            initialValue: name
                         })(
                             <Input placeholder={'Please input a name of category'} />
                         )

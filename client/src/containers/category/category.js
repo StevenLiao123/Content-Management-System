@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, Table, Button, Icon, message, Modal } from 'antd';
 
 import LinkButton from '../../components/link-button';
-import { reqCategories, reqUpdateCategory, reqAddCategory } from '../../api';
+import { reqCategories, reqUpdateCategory } from '../../api';
 import AddForm from './add-form';
 import UpdateForm from './update-form';
 
@@ -112,7 +112,7 @@ export default class Category extends Component {
 
     // update a category
     updateCategory = async () => {
-        console.log('updateCategory');
+        console.log('updateCategory!!!!!');
 
         // hide the modal
         this.setState({
@@ -120,13 +120,13 @@ export default class Category extends Component {
         });
 
         const _id = this.category._id;
-        const name = this.form.getFieldValue('name');
+        const updateName = this.form.getFieldValue('name');
+        console.log(_id, updateName);
 
         // update the category by ajax
-        const result = await reqUpdateCategory({ _id, name });
-        if (result.name) {
-            // show the new list 
-            console.log('name', result.name);
+        const result = await reqUpdateCategory({_id, updateName});
+        // show the new list
+        if(result === true) {
             this.getCategories();
         }
     }
@@ -200,7 +200,7 @@ export default class Category extends Component {
                     onCancel={this.handleCancel}
                 >
                     <UpdateForm 
-                        categoryName={category.name} 
+                        name={category.name} 
                         setForm={(form) => {this.form = form}}
                     />
                 </Modal>

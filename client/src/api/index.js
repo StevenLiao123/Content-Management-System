@@ -22,7 +22,6 @@ export const reqAddCategory = (name, parentId) => ajax(BASE + '/category/add', {
 // Update a category
 export const reqUpdateCategory = (_id, name) => ajax(BASE + '/category/update', {_id, name}, 'POST');
 
-
 // jsonp request for weather
 export const reqWeather = (city) => {
 

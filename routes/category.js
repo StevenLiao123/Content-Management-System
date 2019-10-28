@@ -70,11 +70,12 @@ router.delete('/:name', async (req, res) => {
 });
 
 // update a category
-router.post('/update', (req, res, next) => {
-    Category.find({ _id: req.body._id }, async () => {
+router.patch('/update', (req, res, next) => {
+    Category.find({_id: req.body._id}, async () => {
         try {
             const updateCategory = await Category.updateOne(
-                { name: req.body.name },
+                {name: req.body.name},
+                {$set: { _id: req.body._id }}
             );
             res.json('Update sccuessful!', updateCategory);
     
