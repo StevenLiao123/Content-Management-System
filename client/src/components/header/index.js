@@ -98,7 +98,7 @@ class Header extends Component {
 
     render() {
         const { currentTime, name, temp, icon } = this.state;
-        const iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+        const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
         const username = memoryUtils.user[0].username;
         const title = this.getTitle();
 
