@@ -6,7 +6,7 @@ import Proptypes from 'prop-types';
 // the form for updating a category
 class UpdateForm extends Component {
     static propTypes = {
-        categoryName: Proptypes.string.isRequired,
+        name: Proptypes.string.isRequired,
         setForm: Proptypes.func.isRequired
     };
 

@@ -19,9 +19,9 @@ class AddForm extends Component {
                             initialValue: '0'
                         })(
                             <Select>
-                                <Option value='0'>1</Option>
-                                <Option value='1'>2</Option>
-                                <Option value='2'>3</Option>
+                                <Option value='0'>Parent Category</Option>
+                                <Option value='1'>Computers</Option>
+                                <Option value='2'>Books</Option>
                                 <Option value='3'>4</Option>
                             </Select>
                         )

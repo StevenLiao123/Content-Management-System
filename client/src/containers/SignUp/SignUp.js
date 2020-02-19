@@ -41,6 +41,12 @@ class SignUp extends Component {
         }
     }
 
+    // confirmPassword = (rule, value, callback) => {
+    //     if () {
+
+    //     }
+    // }
+
     toLogin = () => {
         this.props.history.push('/login');
     }
@@ -101,6 +107,18 @@ class SignUp extends Component {
                                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
                                 type="password"
                                 placeholder="Password"
+                            />)}
+                        </Form.Item>
+                        <Form.Item>
+                            {getFieldDecorator('password', {
+                                rules: [
+                                    {
+                                        validator: this.confirmPassword
+                                    }],
+                            })(<Input
+                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                                type="confirmPassword"
+                                placeholder="Confirm Password"
                             />)}
                         </Form.Item>
                         <Form.Item>
