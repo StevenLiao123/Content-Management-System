@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, Table, Button, Icon, message, Modal } from 'antd';
 
 import LinkButton from '../../components/link-button';
-import { reqCategories, reqUpdateCategory } from '../../api';
+import { reqCategories, reqUpdateCategory, reqAddCategory } from '../../api';
 import AddForm from './add-form';
 import UpdateForm from './update-form';
 
@@ -38,10 +38,11 @@ export default class Category extends Component {
     }
 
     // get a list of categories by ajax 
-    getCategories = async () => {
+    getCategories = async (parentId) => {
         // show loading before send the request
         this.setState({ loading: true });
-        const { parentId } = this.state;
+        // const { parentId } = this.state;
+        parentId = parentId || this.state.parentId;
 
         const categories = await reqCategories(parentId);
 
@@ -107,12 +108,30 @@ export default class Category extends Component {
     }
 
     // add a category
-    addCategory = () => {
+    addCategory = async () => {
         // hide the modal
         this.setState({
             showModalStatus: 0
         });
-        console.log('addCategory');
+        
+        // collect the data form the form
+        const { parentId, name } = this.form.getFieldsValue();
+        console.log(parentId, name);
+
+        // hide the incoming values
+        this.form.resetFields();
+
+        // make a request for adding category
+        const result = await reqAddCategory(name, parentId);
+
+        // refresh the category or sub-category list based on the parent id
+        if (result) {
+            if (parentId === this.state.parentId) {
+                this.getCategories();
+            } else if (parentId === 'a') {
+                this.getCategories(parentId);
+            }
+        }
     }
 
     // update a category
@@ -127,19 +146,17 @@ export default class Category extends Component {
         // get the values for updating a category
         const _id = this.category._id;
         const name = this.form.getFieldValue('name');
-        // console.log(_id, name);
+    
+        // clear the incoming values
+        this.form.resetFields();
 
         // update the category by ajax
         const result = await reqUpdateCategory({_id, name});
 
         // show the new list
         if(result) {
-            console.log('result: ', result);
             this.getCategories();
         }
-
-        // clear the incoming values
-        this.form.resetFields();
     }
 
 
@@ -205,7 +222,11 @@ export default class Category extends Component {
                     onOk={this.addCategory}
                     onCancel={this.handleCancel}
                 >
-                    <AddForm />
+                    <AddForm 
+                        categories={categories} 
+                        parentId={parentId}
+                        setForm={(form) => {this.form = form}} 
+                    />
                 </Modal>
 
                 <Modal

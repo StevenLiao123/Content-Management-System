@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Select, Input } from 'antd';
+import PropTypes from 'prop-types';
 
 
 const Option = Select.Option;
@@ -7,22 +8,32 @@ const Option = Select.Option;
 // the form for adding a category
 class AddForm extends Component {
 
+    static propTypes = {
+        setForm: PropTypes.func.isRequired, // the function for transfering the objects of form
+        categories: PropTypes.array.isRequired, // the array of parent categories
+        parentId: PropTypes.string.isRequired // the id of sub-categories
+    };
+
+    componentWillMount () {
+        this.props.setForm(this.props.form);
+    }
+
     render() {
+        const { categories, parentId } = this.props
         const { getFieldDecorator } = this.props.form;
-
-
+        console.log(parentId);
         return (
             <Form>
                 <Form.Item>
                     {
                         getFieldDecorator('parentId', {
-                            initialValue: '0'
+                            initialValue: parentId
                         })(
                             <Select>
-                                <Option value='0'>Parent Category</Option>
-                                <Option value='1'>Computers</Option>
-                                <Option value='2'>Books</Option>
-                                <Option value='3'>4</Option>
+                                <Option value='a'>Parent Category</Option>
+                                {
+                                    categories.map(category => <Option value={category._id}>{category.name}</Option>)
+                                }
                             </Select>
                         )
                     }
