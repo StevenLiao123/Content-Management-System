@@ -42,7 +42,11 @@ class AddForm extends Component {
                 <Form.Item>
                     {
                         getFieldDecorator('name', {
-                            initialValue: ''
+                            initialValue: '',
+                            rules: [{
+                                required: true,
+                                message: "You should type in the name first!"
+                            }],
                         })(
                             <Input placeholder='Please input a name of category' />
                         )

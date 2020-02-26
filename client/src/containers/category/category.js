@@ -108,55 +108,62 @@ export default class Category extends Component {
     }
 
     // add a category
-    addCategory = async () => {
-        // hide the modal
-        this.setState({
-            showModalStatus: 0
-        });
-        
-        // collect the data form the form
-        const { parentId, name } = this.form.getFieldsValue();
-        console.log(parentId, name);
+    addCategory = () => {
+        this.form.validateFields(async (err, values) => {
+            if (!err) {
+                // hide the modal
+                this.setState({
+                    showModalStatus: 0
+                });
+                
+                // collect the data form the form
+                const { parentId, name } = values;
+                console.log(parentId, name);
 
-        // hide the incoming values
-        this.form.resetFields();
+                // hide the incoming values
+                this.form.resetFields();
 
-        // make a request for adding category
-        const result = await reqAddCategory(name, parentId);
+                // make a request for adding category
+                const result = await reqAddCategory(name, parentId);
 
-        // refresh the category or sub-category list based on the parent id
-        if (result) {
-            if (parentId === this.state.parentId) {
-                this.getCategories();
-            } else if (parentId === 'a') {
-                this.getCategories(parentId);
+                // refresh the category or sub-category list based on the parent id
+                if (result) {
+                    if (parentId === this.state.parentId) {
+                        this.getCategories();
+                    } else if (parentId === 'a') {
+                        this.getCategories(parentId);
+                    }
+                }
             }
-        }
+        });
     }
 
     // update a category
-    updateCategory = async () => {
-        console.log('updateCategory!!!!!');
+    updateCategory = () => {
+        // Form validation
+        this.form.validateFields(async (err, values) => {
+            if (!err) {
+                // hide the modal
+                this.setState({
+                    showModalStatus: 0
+                });
 
-        // hide the modal
-        this.setState({
-            showModalStatus: 0
+                // get the values for updating a category
+                const _id = this.category._id;
+                const { name } = values;
+            
+                // clear the incoming values
+                this.form.resetFields();
+
+                // update the category by ajax
+                const result = await reqUpdateCategory({_id, name});
+
+                // show the new list
+                if(result) {
+                    this.getCategories();
+                }
+            }
         });
-
-        // get the values for updating a category
-        const _id = this.category._id;
-        const name = this.form.getFieldValue('name');
-    
-        // clear the incoming values
-        this.form.resetFields();
-
-        // update the category by ajax
-        const result = await reqUpdateCategory({_id, name});
-
-        // show the new list
-        if(result) {
-            this.getCategories();
-        }
     }
 
 
