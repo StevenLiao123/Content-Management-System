@@ -11,8 +11,9 @@ const productSchema = mongoose.Schema({
     description: {
         type: String,
     },
+    
     price: {
-        type: number,
+        type: Number,
     },
     pCategoryId: {
         type: String
