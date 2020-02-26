@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const productSchema = mongoose.Schema({
+const categorySchema = mongoose.Schema({
     parentId: {
         type: String,
     },
@@ -10,4 +10,4 @@ const productSchema = mongoose.Schema({
     },
 }, { collection: 'categories' });
 
-module.exports = mongoose.model('Category', productSchema);
+module.exports = mongoose.model('Category', categorySchema);
