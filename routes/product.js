@@ -32,7 +32,8 @@ router.post('/add', (req, res, next) => {
             });
         } else {
             const product = new Product({
-                image: req.body.image,
+                status: req.body.status,
+                images: req.body.images,
                 name: req.body.name,
                 description: req.body.description,
                 price: req.body.price,

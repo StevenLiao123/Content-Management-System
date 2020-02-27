@@ -15,7 +15,25 @@ const Option = Select.Option;
 
 export default class ProductHome extends Component {
     state = {
-        products: [],
+        products: [{
+            "_id": "sadasdsadasdasd",
+            "image": "5dae86bdbd2a2a0a462882e3sd",
+            "name": "superwoman11",
+            "description": "asdasdasdasdasdasdddasd",
+            "price": 888,
+            "pCategoryId": "adasdasdasdasda",
+            "categoryId": "asdsadasdasdasdasd",
+            "detail": "asdsadasfsdgdfgdfgdfgfdgdfg"
+        },{
+            "_id": "11sadasdsadasdasdasd",
+            "image": "5dae86bdbd2a2a0a462882e3ssd",
+            "name": "superman",
+            "description": "asdasdasdasdasdasdasd",
+            "price": 778,
+            "pCategoryId": "adasdasdsdasdasda",
+            "categoryId": "asdsdsadasdasdasdasd",
+            "detail": "asdsassdasfsdgdfgdfgdfgfdgdfg"
+        }],
     }
 
     initialColumns = () => {
@@ -23,18 +41,21 @@ export default class ProductHome extends Component {
             {
               title: 'Name',
               dataIndex: 'name',
-              key: 'name',
             },
             {
-              title: 'Age',
-              dataIndex: 'age',
-              key: 'age',
+              title: 'Description',
+              dataIndex: 'description',
             },
             {
-              title: 'Address',
-              dataIndex: 'address',
-              key: 'address',
+              title: 'Price',
+              dataIndex: 'price',
+              render: (price) => '$' + price
             },
+            {
+                title: 'Status',
+                dataIndex: 'price',
+                render: (price) => '$' + price
+              },
           ];
     }
 
@@ -66,6 +87,7 @@ export default class ProductHome extends Component {
         return (
             <Card title={title} extra={extra}>
                 <Table 
+                    rowKey="_id"
                     dataSource={products} 
                     columns={this.columns} 
                 />;

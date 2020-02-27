@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
 const productSchema = mongoose.Schema({
-    image: {
-        type: String,
+    status: {
+        type: String
+    },
+    images: {
+        type: Array,
     },
     name: {
         type: String,
@@ -22,7 +25,7 @@ const productSchema = mongoose.Schema({
     },
     detail: {
         type: String
-    },
-}, { collection: 'products' });
+    }
+}, { collection: 'products' } );
 
 module.exports = mongoose.model('Product', productSchema);
