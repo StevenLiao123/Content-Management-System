@@ -4,9 +4,9 @@ const productSchema = mongoose.Schema({
     status: {
         type: String
     },
-    images: {
-        type: Array,
-    },
+    images: [{
+        type: String
+    }],
     name: {
         type: String,
         required: true
