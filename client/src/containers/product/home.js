@@ -5,8 +5,14 @@ import {
     Input,
     Button,
     Icon,
-    Table
+    Table,
+    message,
 } from 'antd';
+
+import { reqProducts } from '../../api';
+import { PAGE_SIZE } from '../../utils/constants';
+
+import LinkButton from '../../components/link-button';
 /*
     The component for product's home page
 */
@@ -15,25 +21,8 @@ const Option = Select.Option;
 
 export default class ProductHome extends Component {
     state = {
-        products: [{
-            "_id": "sadasdsadasdasd",
-            "image": "5dae86bdbd2a2a0a462882e3sd",
-            "name": "superwoman11",
-            "description": "asdasdasdasdasdasdddasd",
-            "price": 888,
-            "pCategoryId": "adasdasdasdasda",
-            "categoryId": "asdsadasdasdasdasd",
-            "detail": "asdsadasfsdgdfgdfgdfgfdgdfg"
-        },{
-            "_id": "11sadasdsadasdasdasd",
-            "image": "5dae86bdbd2a2a0a462882e3ssd",
-            "name": "superman",
-            "description": "asdasdasdasdasdasdasd",
-            "price": 778,
-            "pCategoryId": "adasdasdsdasdasda",
-            "categoryId": "asdsdsadasdasdasdasd",
-            "detail": "asdsassdasfsdgdfgdfgdfgfdgdfg"
-        }],
+        products: [],
+        loading: false, // used to determine whether it is in the process of getting data
     }
 
     initialColumns = () => {
@@ -52,19 +41,61 @@ export default class ProductHome extends Component {
               render: (price) => '$' + price
             },
             {
+                width: 100,
                 title: 'Status',
-                dataIndex: 'price',
-                render: (price) => '$' + price
-              },
+                render: (status) => {
+                    return (
+                        <span>
+                            { status == "1" ? <Button type="primary">Off the market</Button> : <Button type="primary">On the market</Button> }
+                            { status == "1" ? <span>Available</span> : <span>Off store</span> }
+                        </span>
+                    )
+                }
+            },
+            {
+                width: 100,
+                title: 'Function',
+                render: (products) => {
+                    return (
+                        <span>
+                            <LinkButton>Details</LinkButton>
+                            <LinkButton>Edit</LinkButton>
+                        </span>
+                    )
+                }
+            },
           ];
+    }
+
+    // get a list of products by ajax 
+    getProducts = async () => {
+        // show loading before send the request
+        this.setState({ loading: true });
+
+        const products = await reqProducts();
+
+        this.setState({ loading: false });
+
+        if (products) {
+            this.setState({
+                products
+            })
+        } else {
+            message.error('failed to get products!');
+        }
+
     }
 
     componentWillMount () {
         this.initialColumns();
     }
 
+    componentDidMount () {
+        this.getProducts();
+    }
+
     render() {
-        const { products } = this.state;
+        const { products, loading } = this.state;
 
         const title = (
             <span>
@@ -86,10 +117,13 @@ export default class ProductHome extends Component {
 
         return (
             <Card title={title} extra={extra}>
-                <Table 
+                <Table
+                    loading={loading}
+                    bordered 
                     rowKey="_id"
                     dataSource={products} 
-                    columns={this.columns} 
+                    columns={this.columns}
+                    pagination={{ defaultPageSize: PAGE_SIZE, showQuickJumper: true }} 
                 />;
             </Card>
         )

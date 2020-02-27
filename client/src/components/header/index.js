@@ -111,8 +111,8 @@ class Header extends Component {
                 <div className="header-bottom">
                     <div className="header-bottom-left">{title}</div>
                     <div className="header-bottom-right">
-                        <span>{currentTime}</span>
-                        <span>{name}</span>
+                        <span className="disabled">{currentTime}</span>
+                        <span className="disabled">{name}</span>
                         <img src={iconUrl} alt="weather"/>
                         <span>{this.convertKelvinToCelsius(temp).toFixed(1)+`°C`}</span>
                     </div>

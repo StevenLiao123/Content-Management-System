@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import './App.css';
+import "antd/dist/antd.css";
 
 import Signup from './containers/SignUp';
 import Login from './containers/Login';
