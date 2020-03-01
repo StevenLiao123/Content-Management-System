@@ -31,7 +31,7 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.connect( process.env.MONGODB_URI || process.env.DB_CONNECTION,
     { useNewUrlParser: true },
     () => {
-        console.log('MongoDB created!!');
+        console.log('MongoDB connected!!');
     }
 );
 

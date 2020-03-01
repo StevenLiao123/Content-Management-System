@@ -5,13 +5,13 @@ import jsonp from 'jsonp';
 import ajax from './ajax';
 import { message } from 'antd';
 
-const BASE = "https://floating-beyond-26711.herokuapp.com";
+const BASE = process.env.NODE_ENV === "production" ? "https://floating-beyond-26711.herokuapp.com" : "http://localhost:8080";
 
 // Login
-export const reqLogin = (username, password) => ajax('/user/login', { username, password }, 'POST');
+export const reqLogin = (username, password) => ajax(BASE + '/user/login', { username, password }, 'POST');
 
 // Sign up
-export const reqSignup = (username, password, email) => ajax('/user/signup', { username, password, email }, 'POST');
+export const reqSignup = (username, password, email) => ajax(BASE + '/user/signup', { username, password, email }, 'POST');
 
 // get a list of categories based on the parentId
 export const reqCategories = (parentId) => ajax(BASE + '/category/list', {parentId}, 'POST');

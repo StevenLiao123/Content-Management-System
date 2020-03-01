@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Menu, Icon } from 'antd';
+import { connect } from 'react-redux';
+import { setHeaderTitle } from '../../redux/actions';
 
 import menuList from '../../config/menuConfig';
 import logo from '../../assets/images/logo.jpeg';
@@ -19,7 +21,7 @@ class LeftNav extends Component {
             if (!item.children) {
                 return (
                     <Menu.Item key={item.key}>
-                        <Link to={item.key} >
+                        <Link to={item.key} onClick={() => this.props.setHeaderTitle(item.title)}>
                             <Icon type={item.icon} />
                             <span>{item.title}</span>
                         </Link>
@@ -84,4 +86,7 @@ class LeftNav extends Component {
     }
 }
 
-export default withRouter(LeftNav);
+export default connect(
+    state => ({}),
+    { setHeaderTitle }
+)(withRouter(LeftNav));

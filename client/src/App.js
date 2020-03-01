@@ -3,9 +3,9 @@ import { Switch, Route } from 'react-router-dom';
 import './App.css';
 import "antd/dist/antd.css";
 
-import Signup from './containers/SignUp';
-import Login from './containers/Login';
-import Admin from './containers/Admin';
+import Signup from './pages/SignUp';
+import Login from './pages/Login';
+import Admin from './pages/Admin';
 
 export default class App extends Component {
 

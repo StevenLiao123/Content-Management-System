@@ -46,8 +46,8 @@ export default class ProductHome extends Component {
                 render: (status) => {
                     return (
                         <span>
-                            { status == "1" ? <Button type="primary">Off the market</Button> : <Button type="primary">On the market</Button> }
-                            { status == "1" ? <span>Available</span> : <span>Off store</span> }
+                            { status === "1" ? <Button type="primary">Off the market</Button> : <Button type="primary">On the market</Button> }
+                            { status === "1" ? <span>Available</span> : <span>Off store</span> }
                         </span>
                     )
                 }

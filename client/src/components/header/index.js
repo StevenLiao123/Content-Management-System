@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import LinkButton from '../../components/link-button';
 import { Modal } from 'antd';
-import menuList from '../../config/menuConfig';
 import { reqWeather } from '../../api';
 import memoryUtils from '../../utils/memoryUtils';
 import storageUtils from '../../utils/storageUtils';
@@ -34,26 +34,6 @@ class Header extends Component {
 
         // update the state
         this.setState({ name, temp, icon });
-    }
-
-    getTitle = () => {
-        // get the current path
-        const path = this.props.location.pathname;
-        let title;
-        menuList.forEach(item => {
-            // the title of item of menulist is the title that should be display on the main page if the key of item totally equal to the current path
-            if(item.key === path) {
-                title = item.title;
-            } else if(item.children) {
-                // use the same login in children to find the key of item equal to path and then get the corresponding title
-                item.children.find(subItem => {
-                    if(subItem.key === path) {
-                        title = subItem.title;
-                    }
-                });
-            }
-        });
-        return title;
     }
 
     logout = () => {
@@ -100,7 +80,7 @@ class Header extends Component {
         const { currentTime, name, temp, icon } = this.state;
         const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
         const username = memoryUtils.user[0].username;
-        const title = this.getTitle();
+        const title = this.props.headerTitle;
 
         return (
             <div className="header">
@@ -122,4 +102,7 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header);
+export default connect(
+    state => ({ headerTitle: state.headerTitle }),
+    {}
+)(withRouter(Header));
