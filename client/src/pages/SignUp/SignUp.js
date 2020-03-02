@@ -3,7 +3,7 @@ import LinkButton from '../../components/link-button';
 import { Form, Icon, Input, Button, message } from 'antd';
 import { reqSignup } from '../../api';
 
-import './signUp.less';
+import './SignUp.less';
 import logo from '../../assets/images/logo.jpeg';
 
 class SignUp extends Component {
