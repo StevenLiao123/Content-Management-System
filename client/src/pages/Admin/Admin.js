@@ -13,7 +13,7 @@ import BarChart from '../charts/barChart';
 import LineChart from '../charts/lineChart';
 import PieChart from '../charts/pieChart';
 
-import './admin.less';
+import './Admin.less';
 
 const { Footer, Sider, Content } = Layout;
 
