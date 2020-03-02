@@ -4,7 +4,7 @@ import './App.css';
 
 import Signup from './pages/SignUp';
 import Login from './pages/Login';
-import Admin from './pages/admin';
+import Admin from './pages/Admin';
 
 export default class App extends Component {
 
