@@ -21,7 +21,6 @@ class AddForm extends Component {
     render() {
         const { categories, parentId } = this.props
         const { getFieldDecorator } = this.props.form;
-        console.log(parentId);
         return (
             <Form>
                 <Form.Item>

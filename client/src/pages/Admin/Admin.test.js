@@ -1,4 +1,4 @@
-import Admin from './Admin';
+import Admin from './admin';
 import React from 'react';
 import { shallow, configure } from 'enzyme';
 import EnzymeAdapter from 'enzyme-adapter-react-16';

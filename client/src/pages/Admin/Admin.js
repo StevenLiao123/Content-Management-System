@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { Layout } from 'antd';
-
-import memoryUtils from '../../utils/memoryUtils';
+import { connect } from 'react-redux';
 import LeftNav from '../../components/left-nav';
 import Header from '../../components/header';
 import Home from '../home/home';
@@ -14,16 +13,16 @@ import BarChart from '../charts/barChart';
 import LineChart from '../charts/lineChart';
 import PieChart from '../charts/pieChart';
 
-import './Admin.less';
+import './admin.less';
 
 const { Footer, Sider, Content } = Layout;
 
 // asdasdas
 class Admin extends Component {
     render() {
-        const user = memoryUtils.user;
+        const user = this.props.user;
         // if memory doesn't have user just redirect to login page.
-        if (!user[0] || !user[0]._id) {
+        if (!user || !user.username) {
             return <Redirect to='/login' />
         }
         return (
@@ -53,4 +52,7 @@ class Admin extends Component {
     }
 }
 
-export default Admin;
+export default connect(
+    state => ({user: state.user}),
+    {}
+)(Admin);

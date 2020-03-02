@@ -19,6 +19,9 @@ class LeftNav extends Component {
 
         return menuList.map(item => {
             if (!item.children) {
+                if (item.key===path || path.indexOf(item.key)===0) {
+                    this.props.setHeaderTitle(item.title);
+                }
                 return (
                     <Menu.Item key={item.key}>
                         <Link to={item.key} onClick={() => this.props.setHeaderTitle(item.title)}>

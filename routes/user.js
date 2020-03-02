@@ -42,7 +42,6 @@ router.post('/signup', (req, res, next) => {
         
                     user.save()
                         .then(result => {
-                            console.log(result);
                             res.status(201).json({
                                 message: 'User created!'
                             });
@@ -64,15 +63,15 @@ router.post('/login', (req, res, next) => {
         .then(user => {
             if( user.length < 1 ) {
                 return res.status(401).json({
-                    message: 'Authentication failed! [0]'
+                    message: 'Sorry, the account is not exist.'
                 });
             }
             bcrypt.compare(req.body.password, user[0].password, (err, result) => {
                 if(err) {
                     return res.status(401).json({
-                        message: 'User name or password incorrect! [1]'
+                        message: 'User name or password incorrect!'
                     });
-                } if(result) {
+                } else if(result) {
                     const token = jwt.sign({
                         username: user[0].username,
                         userId: user[0]._id
@@ -89,7 +88,7 @@ router.post('/login', (req, res, next) => {
                     });
                 } 
                 res.status(401).json({
-                    message: 'User name or password incorrect! [2]'
+                    message: 'Sorry, user name or password incorrect!'
                 });
             });
         })

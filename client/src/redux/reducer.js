@@ -3,7 +3,11 @@
 */
 import { combineReducers } from 'redux';
 import storageUtils from '../utils/storageUtils';
-import { SET_HEADER_TITLE } from './action-types';
+import { 
+    SET_HEADER_TITLE,
+    RECEIVE_USER,
+    RESET_USER 
+} from './action-types';
 
 // The function is used to manage the title of the header
 const initialHeaderTitle = "Home";
@@ -20,6 +24,10 @@ function headerTitle (state = initialHeaderTitle, action) {
 const initialUser = storageUtils.getUser();
 function user (state = initialUser, action) {
     switch (action.type) {
+        case RECEIVE_USER:
+            return action.user 
+        case RESET_USER:
+            return {}    
         default: 
             return state
     }

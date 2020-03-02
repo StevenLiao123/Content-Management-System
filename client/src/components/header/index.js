@@ -5,11 +5,10 @@ import { connect } from 'react-redux';
 import LinkButton from '../../components/link-button';
 import { Modal } from 'antd';
 import { reqWeather } from '../../api';
-import memoryUtils from '../../utils/memoryUtils';
-import storageUtils from '../../utils/storageUtils';
 import { formatDate } from '../../utils/dateUtils';
 import './index.less';
 import { setInterval } from 'timers';
+import { logout } from '../../redux/actions';
 
 class Header extends Component {
     
@@ -40,13 +39,7 @@ class Header extends Component {
        Modal.confirm({
         title: 'Do you Want to logout?',
         onOk: () => {
-          // console.log('ok',this);
-          // delete the data of user in localStorage
-          storageUtils.removeUser();
-          memoryUtils.user = {};
-
-          // jump to the login page
-          this.props.history.replace('/login');
+            this.props.logout();
         }
       }); 
     }
@@ -79,7 +72,7 @@ class Header extends Component {
     render() {
         const { currentTime, name, temp, icon } = this.state;
         const iconUrl = `https://openweathermap.org/img/wn/${icon}@2x.png`;
-        const username = memoryUtils.user[0].username;
+        const username = this.props.user.username;
         const title = this.props.headerTitle;
 
         return (
@@ -103,6 +96,6 @@ class Header extends Component {
 }
 
 export default connect(
-    state => ({ headerTitle: state.headerTitle }),
-    {}
+    state => ({ headerTitle: state.headerTitle, user: state.user }),
+    { logout }
 )(withRouter(Header));

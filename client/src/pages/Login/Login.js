@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Form, Icon, Input, Button, message } from 'antd';
+import { Form, Icon, Input, Button } from 'antd';
 import { Redirect, withRouter } from 'react-router-dom';
-import { reqLogin } from '../../api';
 import LinkButton from '../../components/link-button';
-import memoryUtils from '../../utils/memoryUtils';
-import storageUtils from '../../utils/storageUtils';
+
+import { connect } from 'react-redux';
+import { login } from '../../redux/actions';
 
 import './login.less';
 import logo from '../../assets/images/logo.jpeg';
@@ -17,15 +17,8 @@ class Login extends Component {
         // validate the value from input
         this.props.form.validateFields(async (err, values) => {
             if (!err) {
-                //console.log('Submit success!', values);
                 const { username, password } = values;
-                const response = await reqLogin(username, password);
-                message.success('Login successful!');
-                // save data in memory
-                const user = response.data;
-                memoryUtils.user = user; // save user in the memory
-                storageUtils.saveUser(user); // save user in the local storage
-                this.props.history.replace('/');              
+                this.props.login(username, password);   
             } else {
                 console.log('Submit is failed!');
             }
@@ -34,7 +27,6 @@ class Login extends Component {
 
     // custom validation for password
     validatePassword = (rule, value, callback) => {
-        console.log('validatePassword', rule, value);
         if (!value) {
             callback('Please input your password!');
         } else if (value.length < 4) {
@@ -54,9 +46,9 @@ class Login extends Component {
 
     render() {
         // jump into the managment page if the user has already been signed in 
-        const user = memoryUtils.user;
-        if(user[0]) {
-            return <Redirect to='/' />;
+        const user = this.props.user;
+        if(user && user._id) {
+            return <Redirect to='/home' />;
         }
         // get form object 
         const form = this.props.form;
@@ -130,4 +122,7 @@ class Login extends Component {
 
 //Form.create()() is a higher order function(HOF) and WrappedLogin is a higher order component(HOC)
 const WrappedLogin = Form.create()(Login);
-export default withRouter(WrappedLogin);
+export default connect(
+    state => ({user: state.user}),
+    { login }
+)(withRouter(WrappedLogin));

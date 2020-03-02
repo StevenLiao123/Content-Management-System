@@ -76,7 +76,6 @@ export default class Category extends Component {
         }, () => {
             // get the sub categories
             this.getCategories();
-            // console.log('Parent id: ' + this.state.parentId);
         });
     }
 
@@ -119,7 +118,6 @@ export default class Category extends Component {
                 
                 // collect the data form the form
                 const { parentId, name } = values;
-                console.log(parentId, name);
 
                 // hide the incoming values
                 this.form.resetFields();

@@ -4,15 +4,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
-import memoryUtils from './utils/memoryUtils';
-import storageUtils from './utils/storageUtils';
-
 import store from './redux/store';
 import { Provider } from 'react-redux';
-
-
-const user = storageUtils.getUser();
-memoryUtils.user = user;
 
 ReactDOM.render(
     <Provider store={store}>

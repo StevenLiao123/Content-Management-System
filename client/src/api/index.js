@@ -33,14 +33,12 @@ export const reqWeather = (city) => {
 
         // execute jsonp request
         jsonp(url, {}, (error, data) => {
-            console.log('jsonp', error, data);
             if (!error) {
                 // get the name, icon and description from openWeather API
                 const name = data.name;
                 const icon = data.weather[0].icon;
                 const temp = data.main.temp;
                 resolve({ name, temp, icon } );
-                console.log('jsonp', name, temp, icon);
             } else {
                 message.error('Get weather API Failed!');
             }

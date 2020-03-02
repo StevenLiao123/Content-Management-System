@@ -3,7 +3,7 @@ import LinkButton from '../../components/link-button';
 import { Form, Icon, Input, Button, message } from 'antd';
 import { reqSignup } from '../../api';
 
-import './SignUp.less';
+import './signUp.less';
 import logo from '../../assets/images/logo.jpeg';
 
 class SignUp extends Component {
@@ -14,7 +14,6 @@ class SignUp extends Component {
         // validate the value from input
         this.props.form.validateFields(async (err, values) => {
             if (!err) {
-                //console.log('Submit success!', values);
                 const { username, password, email } = values;
                 const response = await reqSignup(username, password, email);
                 message.success('Sign up successful!', response);
@@ -27,7 +26,6 @@ class SignUp extends Component {
 
     // custom validation for password
     validatePassword = (rule, value, callback) => {
-        console.log('validatePassword', rule, value);
         if (!value) {
             callback('Please input your password!');
         } else if (value.length < 4) {
@@ -40,12 +38,6 @@ class SignUp extends Component {
             callback();
         }
     }
-
-    // confirmPassword = (rule, value, callback) => {
-    //     if () {
-
-    //     }
-    // }
 
     toLogin = () => {
         this.props.history.push('/login');
