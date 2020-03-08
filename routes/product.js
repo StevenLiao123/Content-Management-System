@@ -12,16 +12,38 @@ router.get('/', async (req, res) => {
     }
 });
 
-// get a list of products based on the name
-router.post('/list', async (req, res) => {
+// get a list of products based on the name or description
+// router.post('/list', async (req, res) => {
+//     try {
+//         let products;
+//         if (req.body.searchType === "description") {
+//             products = await Product.find({ description: { $regex: req.body.searchName }});
+//         } else {
+//             products = await Product.find({ name: { $regex: req.body.searchName }});
+//         }
+//         res.json(products);
+//     } catch (err) {
+//         res.json({ message: err });
+//     }
+// });
+
+router.post('/list/name', async (req, res) => {
     try {
-        const productsByParentId = await Product.find({ name: req.body.name });
-        res.json(productsByParentId);
+        const products = await Product.find({ name: { $regex: req.body.searchName }});
+        res.json(products);
     } catch (err) {
         res.json({ message: err });
     }
 });
 
+router.post('/list/description', async (req, res) => {
+    try {
+        const products = await Product.find({ description: { $regex: req.body.searchName }});
+        res.json(products);
+    } catch (err) {
+        res.json({ message: err });
+    }
+});
 
 // Create a new product
 router.post('/add', (req, res, next) => {
