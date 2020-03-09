@@ -9,7 +9,7 @@ import {
     message,
 } from 'antd';
 
-import { reqProducts, reqSearchProdcutsByName, reqSearchProdcutsByDescription } from '../../api';
+import { reqProducts, reqSearchProdcutsByName, reqSearchProdcutsByDescription, reqUpdateProdcutsStatus } from '../../api';
 import { PAGE_SIZE } from '../../utils/constants';
 
 import LinkButton from '../../components/link-button';
@@ -45,11 +45,18 @@ export default class ProductHome extends Component {
             {
                 width: 100,
                 title: 'Status',
-                render: (status) => {
+                render: (products) => {
+                    const {_id, status} = products;
+                    const newStatus = status === "1" ? "0" : "1";
                     return (
                         <span>
-                            { status === "1" ? <Button type="primary">Off the market</Button> : <Button type="primary">On the market</Button> }
-                            { status === "1" ? <span>Available</span> : <span>Off store</span> }
+                            <Button 
+                                type="primary" 
+                                onClick={() => this.updateProdcutsStatus(_id, newStatus)}
+                            >
+                                { status === "1" ? "Off the market" : "On the market" } 
+                            </Button>
+                            <span>{ status === "1" ? "Available" : "Off store" }</span>
                         </span>
                     )
                 }
@@ -60,7 +67,7 @@ export default class ProductHome extends Component {
                 render: (products) => {
                     return (
                         <span>
-                            <LinkButton>Details</LinkButton>
+                            <LinkButton onClick={() => this.props.history.push('/product/details', products)}>Details</LinkButton>
                             <LinkButton>Edit</LinkButton>
                         </span>
                     )
@@ -95,6 +102,15 @@ export default class ProductHome extends Component {
         } else {
             message.error('failed to get products!');
         }
+    }
+
+    updateProdcutsStatus = async(_id, status) => {
+        const result = await reqUpdateProdcutsStatus(_id, status);
+        if(result) {
+            message.success("Update status sccuess!");
+            this.getProducts();
+        }
+
     }
 
     componentWillMount () {

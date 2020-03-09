@@ -28,9 +28,14 @@ export const reqProducts = () => ajax(BASE + '/product', {}, 'GET');
 // get a list of products
 // export const reqSearchProdcuts = ({searchName, searchType}) => ajax(BASE + '/product/list', {searchName, searchType}, 'POST');
 
+// get a list of products by name
 export const reqSearchProdcutsByName = (searchName) => ajax(BASE + '/product/list/name', {searchName}, 'POST');
 
+// get a list of products by description
 export const reqSearchProdcutsByDescription = (searchName) => ajax(BASE + '/product/list/description', {searchName}, 'POST');
+
+// get a list of products
+export const reqUpdateProdcutsStatus = (_id, status) => ajax(BASE + '/product/update/status', {_id, status}, 'POST');
 
 // jsonp request for weather
 export const reqWeather = (city) => {

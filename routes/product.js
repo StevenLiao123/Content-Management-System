@@ -27,6 +27,7 @@ router.get('/', async (req, res) => {
 //     }
 // });
 
+// get a list of products based on name
 router.post('/list/name', async (req, res) => {
     try {
         const products = await Product.find({ name: { $regex: req.body.searchName }});
@@ -36,6 +37,7 @@ router.post('/list/name', async (req, res) => {
     }
 });
 
+// get a list of products based on description
 router.post('/list/description', async (req, res) => {
     try {
         const products = await Product.find({ description: { $regex: req.body.searchName }});
@@ -97,15 +99,31 @@ router.delete('/:name', async (req, res) => {
 
 });
 
-// update a product
-router.post('/update', (req, res, next) => {
+// update a product's name
+router.post('/update/name', (req, res, next) => {
     Product.find({ _id: req.body._id }, async () => {
         try {
-            const updateProduct = await Product.updateOne(
+            const updateProductName = await Product.updateOne(
                 { _id: req.body._id}, 
                 {"$set": { name: req.body.name }}
             );
-            res.json({message:'Update sccuessful!', updateProduct});
+            res.json({message:'Update name sccuessful!', updateProductName});
+
+        } catch (err) {
+            res.json({ message: err });
+        }
+    });
+});
+
+// update a product's status
+router.post('/update/status', (req, res, next) => {
+    Product.find({ _id: req.body._id }, async () => {
+        try {
+            const updateProductStatus = await Product.updateOne(
+                { _id: req.body._id}, 
+                {"$set": { status: req.body.status }}
+            );
+            res.json({message:'Update status sccuessful!', updateProductStatus});
 
         } catch (err) {
             res.json({ message: err });
