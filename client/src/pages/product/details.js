@@ -44,14 +44,14 @@ export default class ProductDetails extends Component {
                         <span>${price}</span>
                     </Item>
                     <Item>
+                        <span className="product product-category">Product's category</span>
+                        <span>Computer --> Laptop</span>
+                    </Item>
+                    <Item>
                         <span className="product product-images">Product's images</span>
                         <span>
                             <img className="product-image" src={macbook} alt="macbook"/>
                         </span>
-                    </Item>
-                    <Item>
-                        <span className="product product-detail">Product's details</span>
-                        <span>details</span>
                     </Item>
                 </List>
             </Card>

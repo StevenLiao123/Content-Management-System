@@ -32,7 +32,7 @@ class LeftNav extends Component {
                 )
             } else {
                 // find a subitem that is macthed by the current route
-                const subItem = item.children.find(subItem => path.indexOf(subItem.key)===0);
+                const subItem = item.children.find(subItem => subItem.key === path);
 
                 if (subItem) {
                     this.openKey = item.key;
@@ -64,11 +64,9 @@ class LeftNav extends Component {
 
     render() {
         // get the path of current route
-        let path = this.props.location.pathname;
+        const path = this.props.location.pathname;
         const openKey = this.openKey
-        if(path.indexOf('/product')===0) { // this expression is used to determine the path of the current product or sub-route of the product.
-            path = '/product';
-        }
+
 
         return (
             <div className="left-nav">
