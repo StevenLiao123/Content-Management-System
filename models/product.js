@@ -19,12 +19,6 @@ const productSchema = mongoose.Schema({
     price: {
         type: Number,
     },
-    pCategoryId: {
-        type: String
-    },
-    categoryId: {
-        type: String
-    },
     detail: {
         type: String
     }
