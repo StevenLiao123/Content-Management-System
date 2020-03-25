@@ -22,8 +22,8 @@ router.get("/", async (req, res) => {
  * set up the S3
  */
 const s3 = new aws.S3({
-  accessKeyId: "AKIAVXLMBK2XTOO6EJ45",
-  secretAccessKey: "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",
+  accessKeyId: process.env.ACCESSKEY_ID,
+  secretAccessKey: process.env.SECRETACCESS_KEY,
   Bucket: "content-management-system"
 });
 
