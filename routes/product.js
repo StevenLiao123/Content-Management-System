@@ -113,7 +113,7 @@ router.post("/profile-img-upload/delete", (req, res) => {
         Key: req.body.imageName
       };
       s3.deleteObject(params, (err, data) => {
-        if (!err) {
+        if(!err) {
           // successful response
           res.json({
             status: 1,
