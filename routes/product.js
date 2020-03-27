@@ -89,7 +89,7 @@ router.post("/profile-img-upload", (req, res) => {
         // If Success
         const imageName = req.file.key;
         const imageLocation = req.file.location;
-        // Response the status, name and url 
+        // Response the status, name and url
         res.json({
           status: 1,
           name: imageName,
@@ -113,7 +113,7 @@ router.post("/profile-img-upload/delete", (req, res) => {
         Key: req.body.imageName
       };
       s3.deleteObject(params, (err, data) => {
-        if(!err) {
+        if (!err) {
           // successful response
           res.json({
             status: 1,
@@ -210,9 +210,9 @@ router.post("/add", (req, res, next) => {
 });
 
 // delete a product
-router.delete("/:name", async (req, res) => {
+router.post("/delete", async (req, res) => {
   try {
-    const removeProduct = await Product.deleteOne({ name: req.params.name });
+    const removeProduct = await Product.deleteOne({ _id: req.body._id });
     res.json({
       message: "Product deleted!",
       removeProduct
@@ -222,15 +222,23 @@ router.delete("/:name", async (req, res) => {
   }
 });
 
-// update a product's name
-router.post("/update/name", (req, res, next) => {
+// update a product
+router.post("/update", (req, res, next) => {
   Product.find({ _id: req.body._id }, async () => {
     try {
-      const updateProductName = await Product.updateOne(
+      const updateProduct = await Product.updateMany(
         { _id: req.body._id },
-        { $set: { name: req.body.name } }
+        {
+          $set: {
+            name: req.body.name,
+            images: req.body.images,
+            description: req.body.description,
+            price: req.body.price,
+            detail: req.body.detail
+          }
+        }
       );
-      res.json({ message: "Update name sccuessful!", updateProductName });
+      res.json({ message: "Update name sccuessful!", updateProduct });
     } catch (err) {
       res.json({ message: err });
     }
