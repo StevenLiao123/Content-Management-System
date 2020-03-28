@@ -5,9 +5,12 @@ import {
     Input,
     Icon,
     Button,
+    message,
 } from 'antd';
 import LinkButton from '../../components/link-button';
-// import PicturesWall from './pictures-wall';
+import PicturesWall from './pictures-wall';
+import RichTextEditor from './rich-text-editor';
+import { reqAddProduct, reqUpdateProdcut } from '../../api';
 /*
     The component for product's add and update page
 */
@@ -15,10 +18,29 @@ const { Item } = Form;
 const { TextArea } = Input;
 
 class ProductAddAndUpdate extends Component {
+    constructor(props) {
+        super(props);
+
+        this.picturesWall = React.createRef();
+        this.richTextEditor = React.createRef();
+    }
+
     submit = () => {
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFields(async (err, values) => {
             if(!err) {
-                alert("Submit" + values.name);
+                // console.log("Submit" + values.name + values.description);
+                const images = this.picturesWall.current.getImages();
+                const detail = this.richTextEditor.current.getContentDetail();
+                // console.log("images "+images+"detail "+detail);
+                const {name, description, price} = values;
+                const _id = this.product._id;
+                const result = this.isUpdate 
+                    ? await reqUpdateProdcut(_id, name, description, price, images, detail) 
+                    : await reqAddProduct(name, description, price, images, detail);
+                if (result) {
+                    message.success(result.message);
+                    this.props.history.goBack();
+                } 
             }
         })
     };
@@ -30,7 +52,16 @@ class ProductAddAndUpdate extends Component {
         callback("The price must be larger than 0");
     };
 
+    componentWillMount() {
+        const product = this.props.location.state;
+        this.isUpdate = !!product;
+        this.product = product || {};
+    }
+
     render() {
+        const { isUpdate, product } = this;
+        const { images, detail } = product;
+
         // the antd object for setting the layout of the item of the form
         const formItemLayout = {
             labelCol: { span: 3 }, // set up the width of the left side of the label
@@ -46,7 +77,7 @@ class ProductAddAndUpdate extends Component {
                         onClick={() => this.props.history.goBack()}
                         />
                 </LinkButton>
-                <span>Add a product</span>
+                <span>{isUpdate ? "Update a product" : "Add a product"}</span>
             </span>
         );
 
@@ -58,7 +89,7 @@ class ProductAddAndUpdate extends Component {
                     <Item label="Product's name">
                         { 
                             getFieldDecorator('name', {
-                                initialValue: '',
+                                initialValue: product.name,
                                 rules: [{
                                     required: true,
                                     message: "This field cannot be left blank"
@@ -69,7 +100,7 @@ class ProductAddAndUpdate extends Component {
                     <Item label="Product's description">
                         { 
                             getFieldDecorator('description', {
-                                initialValue: '',
+                                initialValue: product.description,
                                 rules: [{
                                     required: true,
                                     message: "This field cannot be left blank"
@@ -83,7 +114,7 @@ class ProductAddAndUpdate extends Component {
                     <Item label="Product's price">
                         { 
                             getFieldDecorator('price', {
-                                initialValue: '',
+                                initialValue: product.price,
                                 rules: [{
                                     required: true,
                                     message: "This field cannot be left blank",
@@ -99,10 +130,10 @@ class ProductAddAndUpdate extends Component {
                         }
                     </Item>
                     <Item label="Product's images">
-                        ?
+                        <PicturesWall ref={this.picturesWall} images={images}/>
                     </Item>
-                    <Item label="Product's detail">
-                        Detail
+                    <Item label="Product's detail" labelCol={{span: 3}} wrapperCol={{span: 16}}>
+                        <RichTextEditor ref={this.richTextEditor} detail={detail}/>
                     </Item>
                     <Item>
                         <Button type="primary" onClick={this.submit}>

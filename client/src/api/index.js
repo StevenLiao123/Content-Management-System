@@ -4,8 +4,7 @@
 import jsonp from 'jsonp';
 import ajax from './ajax';
 import { message } from 'antd';
-
-const BASE = process.env.NODE_ENV === "production" ? "https://floating-beyond-26711.herokuapp.com" : "http://localhost:8080";
+import { BASE } from '../utils/constants';
 
 // Login
 export const reqLogin = (username, password) => ajax(BASE + '/user/login', { username, password }, 'POST');
@@ -25,6 +24,9 @@ export const reqUpdateCategory = ({_id, name}) => ajax(BASE + '/category/update'
 // get a list of products
 export const reqProducts = () => ajax(BASE + '/product', {}, 'GET');
 
+// Add a product
+export const reqAddProduct = (name, description, price, images, detail) => ajax(BASE + '/product/add', {name, description, price, images, detail}, 'POST');
+
 // get a list of products
 // export const reqSearchProdcuts = ({searchName, searchType}) => ajax(BASE + '/product/list', {searchName, searchType}, 'POST');
 
@@ -34,14 +36,23 @@ export const reqSearchProdcutsByName = (searchName) => ajax(BASE + '/product/lis
 // get a list of products by description
 export const reqSearchProdcutsByDescription = (searchName) => ajax(BASE + '/product/list/description', {searchName}, 'POST');
 
-// get a list of products
+// update a product
+export const reqUpdateProdcut = (_id, name, description, price, images, detail) => ajax(BASE + '/product/update', {_id, name, description, price, images, detail}, 'POST');
+
+// update the status of a product
 export const reqUpdateProdcutsStatus = (_id, status) => ajax(BASE + '/product/update/status', {_id, status}, 'POST');
+
+// delete an object on S3
+export const reqDeleteImage = (imageName) => ajax(BASE + '/product/profile-img-upload/delete', {imageName}, 'POST');
+
+// delete a product
+export const reqDeleteProduct = (_id) => ajax(BASE + '/product/delete', {_id}, 'POST');
 
 // jsonp request for weather
 export const reqWeather = (city) => {
 
     return new Promise((resolve, reject) => {
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=5481d01e1f55fc521a219134e8545e8e`;
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.REACT_APP_WEATHER_KEY}`;
 
         // execute jsonp request
         jsonp(url, {}, (error, data) => {
@@ -59,6 +70,3 @@ export const reqWeather = (city) => {
 }
 
 reqWeather('Sydney');
-
-// Add an user
-//export const addUser = (user) => ajax('/user/register', user, 'POST');

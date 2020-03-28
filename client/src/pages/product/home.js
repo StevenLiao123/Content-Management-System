@@ -9,8 +9,8 @@ import {
     message,
 } from 'antd';
 
-import { reqProducts, reqSearchProdcutsByName, reqSearchProdcutsByDescription, reqUpdateProdcutsStatus } from '../../api';
-import { PAGE_SIZE } from '../../utils/constants';
+import { reqProducts, reqSearchProdcutsByName, reqSearchProdcutsByDescription, reqUpdateProdcutsStatus, reqDeleteProduct } from '../../api';
+import { PRODUCT_PAGE_SIZE } from '../../utils/constants';
 
 import LinkButton from '../../components/link-button';
 /*
@@ -26,6 +26,19 @@ export default class ProductHome extends Component {
         searchName: "", // keywords need to search
         searchType: 'name', // search by type
     }
+
+    deleteProduct = async (_id) => {
+        // show loading before send the request
+        this.setState({ loading: true }); 
+
+        const result = await reqDeleteProduct(_id);
+        if(result) {
+            message.success(result.message);
+            this.getProducts();
+        }
+
+
+    };
 
     initialColumns = () => {
         this.columns = [
@@ -65,10 +78,12 @@ export default class ProductHome extends Component {
                 width: 100,
                 title: 'Function',
                 render: (products) => {
+                    const {_id} = products;
                     return (
                         <span>
                             <LinkButton onClick={() => this.props.history.push('/product/details', products)}>Details</LinkButton>
-                            <LinkButton>Edit</LinkButton>
+                            <LinkButton onClick={() => this.props.history.push('/product/add-update', products)}>Edit</LinkButton>
+                            <LinkButton onClick={() => this.deleteProduct(_id)}>Delete</LinkButton>
                         </span>
                     )
                 }
@@ -107,7 +122,7 @@ export default class ProductHome extends Component {
     updateProdcutsStatus = async(_id, status) => {
         const result = await reqUpdateProdcutsStatus(_id, status);
         if(result) {
-            message.success("Update status sccuess!");
+            message.success(result.message);
             this.getProducts();
         }
 
@@ -162,8 +177,8 @@ export default class ProductHome extends Component {
                     rowKey="_id"
                     dataSource={products} 
                     columns={this.columns}
-                    pagination={{ defaultPageSize: PAGE_SIZE, showQuickJumper: true }} 
-                />;
+                    pagination={{ defaultPageSize: PRODUCT_PAGE_SIZE, showQuickJumper: true }} 
+                />
             </Card>
         )
     }

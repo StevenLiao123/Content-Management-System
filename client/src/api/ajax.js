@@ -21,7 +21,7 @@ export default function ajax(url, data = {}, type = 'GET') {
             resolve(response.data);
         }) // show error messages if fails
         .catch(error => {   
-            message.error(error.message);
+            message.error(error.response.data.message);
         });
     });
 }
