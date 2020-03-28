@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import macbook from '../../assets/images/product/macbook1.jpeg';
+
 /*
     The component for product's details
 */
@@ -9,11 +9,18 @@ import {
     List
 } from 'antd';
 import LinkButton from '../../components/link-button';
+import PicturesWall from './pictures-wall';
+import RichTextEditor from './rich-text-editor';
 const Item = List.Item;
 
 export default class ProductDetails extends Component {
+    state = {
+        showTextEditorToolbar: true
+    };
+
     render() {
-        const {name, description, price} = this.props.location.state
+        const {name, description, price, images, detail} = this.props.location.state;
+        const {showTextEditorToolbar} = this.state;
         
         const title = (
             <span>
@@ -45,13 +52,11 @@ export default class ProductDetails extends Component {
                     </Item>
                     <Item>
                         <span className="product product-images">Product's images</span>
-                        <span>
-                            <img className="product-image" src={macbook} alt="macbook"/>
-                        </span>
+                        <PicturesWall images={images}/>
                     </Item>
                     <Item>
                         <span className="product product-detail">Product's details</span>
-                        <span>details</span>
+                        <RichTextEditor detail={detail} showTextEditorToolbar={showTextEditorToolbar}/>
                     </Item>
                 </List>
             </Card>
