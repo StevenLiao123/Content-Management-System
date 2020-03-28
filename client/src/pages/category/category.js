@@ -5,7 +5,7 @@ import LinkButton from '../../components/link-button';
 import { reqCategories, reqUpdateCategory, reqAddCategory } from '../../api';
 import AddForm from './add-form';
 import UpdateForm from './update-form';
-import { PAGE_SIZE } from '../../utils/constants';
+import { CATEGORY_PAGE_SIZE } from '../../utils/constants';
 
 export default class Category extends Component {
 
@@ -219,7 +219,7 @@ export default class Category extends Component {
                     loading={loading}
                     dataSource={parentId === 'a' ? categories : subCategories}
                     columns={this.columns}
-                    pagination={{ defaultPageSize: PAGE_SIZE, showQuickJumper: true }}
+                    pagination={{ defaultPageSize: CATEGORY_PAGE_SIZE, showQuickJumper: true }}
                 />
 
                 <Modal
