@@ -26,6 +26,10 @@ app.use('/category', categoryRoute);
 const productRoute = require('./routes/product');
 app.use('/product', productRoute);
 
+// get the route of role
+const roleRoute = require('./routes/role');
+app.use('/role', roleRoute);
+
 //Connect to DB
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect( process.env.MONGODB_URI || process.env.DB_CONNECTION,
