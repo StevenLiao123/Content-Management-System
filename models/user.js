@@ -11,7 +11,16 @@ const userSchema = mongoose.Schema({
     },
     email: {
         type: String
-    }
+    },
+    phone: {
+        type: Number
+    },
+    role_id: {
+        type: Number
+    },
+    create_time: {
+        type: Number
+    },
 });
 
 module.exports = mongoose.model('User', userSchema);

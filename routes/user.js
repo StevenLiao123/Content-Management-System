@@ -37,7 +37,10 @@ router.post('/signup', (req, res, next) => {
                     const user = new User({
                         username: req.body.username,
                         password: hash,
-                        email: req.body.email
+                        email: req.body.email,
+                        phone: req.body.phone,
+                        role_id: req.body.role_id,
+                        create_time: req.body.create_time
                     });
         
                     user.save()
