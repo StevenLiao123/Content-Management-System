@@ -20,6 +20,9 @@ const { TextArea } = Input;
 class ProductAddAndUpdate extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            showPictureWallModal: true
+        };
 
         this.picturesWall = React.createRef();
         this.richTextEditor = React.createRef();
@@ -61,6 +64,7 @@ class ProductAddAndUpdate extends Component {
     render() {
         const { isUpdate, product } = this;
         const { images, detail } = product;
+        const { showPictureWallModal } = this.state;
 
         // the antd object for setting the layout of the item of the form
         const formItemLayout = {
@@ -130,7 +134,7 @@ class ProductAddAndUpdate extends Component {
                         }
                     </Item>
                     <Item label="Product's images">
-                        <PicturesWall ref={this.picturesWall} images={images}/>
+                        <PicturesWall ref={this.picturesWall} images={images} showPictureWallModal={showPictureWallModal}/>
                     </Item>
                     <Item label="Product's detail" labelCol={{span: 3}} wrapperCol={{span: 16}}>
                         <RichTextEditor ref={this.richTextEditor} detail={detail}/>

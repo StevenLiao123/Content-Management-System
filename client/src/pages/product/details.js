@@ -15,12 +15,13 @@ const Item = List.Item;
 
 export default class ProductDetails extends Component {
     state = {
-        showTextEditorToolbar: true
+        showTextEditorToolbar: true,
+        showPictureWallModal: false
     };
 
     render() {
         const {name, description, price, images, detail} = this.props.location.state;
-        const {showTextEditorToolbar} = this.state;
+        const {showTextEditorToolbar, showPictureWallModal} = this.state;
         
         const title = (
             <span>
@@ -52,7 +53,7 @@ export default class ProductDetails extends Component {
                     </Item>
                     <Item>
                         <span className="product product-images">Product's images</span>
-                        <PicturesWall images={images}/>
+                        <PicturesWall images={images} showPictureWallModal={showPictureWallModal}/>
                     </Item>
                     <Item>
                         <span className="product product-detail">Product's details</span>

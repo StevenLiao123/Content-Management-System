@@ -72,7 +72,7 @@ class RichTextEditor extends Component {
           paddingLeft: 10
         }}
         onEditorStateChange={this.onEditorStateChange}
-        toolbarHidden={this.props.showTextEditorToolbar===false}
+        toolbarHidden={this.props.showTextEditorToolbar === false}
         toolbar={{
             image: { uploadCallback: this.uploadImageCallBack, alt: { present: true, mandatory: true } },
           }}
@@ -82,7 +82,8 @@ class RichTextEditor extends Component {
 }
 
 RichTextEditor.propTypes = {
-  detail: PropTypes.string
+  detail: PropTypes.string,
+  showTextEditorToolbar: PropTypes.bool
 };
 
 export default RichTextEditor;
