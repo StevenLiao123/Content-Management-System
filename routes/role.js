@@ -6,7 +6,9 @@ const Role = require('../models/role');
 router.get('/', async (req, res) => {
     try {
         const allRoles = await Role.find();
-        res.json(allRoles);
+        res.json({
+            data: allRoles
+        });
     } catch (err) {
         res.json({ message: err });
     }
@@ -34,7 +36,7 @@ router.post('/add', (req, res, next) => {
             const role = new Role({
                 name: req.body.name,
                 menu: req.body.menu,
-                create_time: req.body.create_time,
+                create_time: Date.now(),
                 auth_time: req.body.auth_time,
                 auth_name: req.body.auth_name
             });
@@ -42,6 +44,7 @@ router.post('/add', (req, res, next) => {
             role.save()
                 .then(result => {
                     res.status(201).json({
+                        data: result,
                         message: 'Role added!'
                     });
                 })
@@ -79,8 +82,9 @@ router.post("/update", (req, res, next) => {
           { _id: req.body._id },
           {
             $set: {
-              name: req.body.name,
               menu: req.body.menu,
+              auth_time: Date.now(),
+              auth_name: req.body.auth_name
             }
           }
         );

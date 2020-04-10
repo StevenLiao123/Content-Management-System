@@ -48,6 +48,15 @@ export const reqDeleteImage = (imageName) => ajax(BASE + '/product/profile-img-u
 // delete a product
 export const reqDeleteProduct = (_id) => ajax(BASE + '/product/delete', {_id}, 'POST');
 
+// get a list of roles
+export const reqRoles = () => ajax(BASE + '/role');
+
+// add a role
+export const reqAddRole = (name) => ajax(BASE + '/role/add', {name}, 'POST');
+
+// update a role
+export const reqUpdateRole = (role) => ajax(BASE + '/role/update', role, 'POST');
+
 // jsonp request for weather
 export const reqWeather = (city) => {
 

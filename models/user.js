@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
     },
     create_time: {
         type: Number
-    },
+    }
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -14,9 +14,9 @@ const roleSchema = mongoose.Schema({
     auth_time: {
         type: Number
     },
-    create_name: {
+    auth_name: {
         type: String
-    },
+    }
 });
 
 module.exports = mongoose.model('Role', roleSchema);

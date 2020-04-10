@@ -64,10 +64,10 @@ class Header extends Component {
     }
 
     // used to clear the timer before the component unload
-    componentWillUnmount() {
-        // clear the timer
-        clearInterval(this.intervalId);
-    }
+    // componentWillUnmount() {
+    //     // clear the timer
+    //     clearInterval(this.intervalId);
+    // }
 
     render() {
         const { currentTime, name, temp, icon } = this.state;
