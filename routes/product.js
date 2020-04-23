@@ -13,7 +13,11 @@ router.get("/", async (req, res) => {
     const allProducts = await Product.find();
     res.json(allProducts);
   } catch (err) {
-    res.json({ message: err });
+    res.json({
+      data: {
+        message: err
+      }
+    });
   }
 });
 
@@ -78,8 +82,10 @@ router.post("/profile-img-upload", (req, res) => {
   profileImgUpload(req, res, error => {
     if (error) {
       res.json({
-        status: 0,
-        error: error
+        data: {
+          status: 0,
+          error: error
+        }
       });
     } else {
       // If File not found
@@ -91,9 +97,11 @@ router.post("/profile-img-upload", (req, res) => {
         const imageLocation = req.file.location;
         // Response the status, name and url
         res.json({
-          status: 1,
-          name: imageName,
-          url: imageLocation
+          data: {
+            status: 1,
+            name: imageName,
+            url: imageLocation
+          }
         });
       }
     }
@@ -113,17 +121,21 @@ router.post("/profile-img-upload/delete", (req, res) => {
         Key: req.body.imageName
       };
       s3.deleteObject(params, (err, data) => {
-        if(!err) {
+        if (!err) {
           // successful response
           res.json({
-            status: 1,
-            message: "delete image successed"
+            data: {
+              status: 1,
+              message: "delete image successed"
+            }
           });
         } else {
           // response failed
           res.json({
-            status: 0,
-            message: "delete image failed"
+            data: {
+              status: 0,
+              message: "delete image failed"
+            }
           });
         }
       });
@@ -133,30 +145,23 @@ router.post("/profile-img-upload/delete", (req, res) => {
   }
 });
 
-// get a list of products based on the name or description
-// router.post('/list', async (req, res) => {
-//     try {
-//         let products;
-//         if (req.body.searchType === "description") {
-//             products = await Product.find({ description: { $regex: req.body.searchName }});
-//         } else {
-//             products = await Product.find({ name: { $regex: req.body.searchName }});
-//         }
-//         res.json(products);
-//     } catch (err) {
-//         res.json({ message: err });
-//     }
-// });
-
 // get a list of products based on name
 router.post("/list/name", async (req, res) => {
   try {
     const products = await Product.find({
       name: { $regex: req.body.searchName }
     });
-    res.json(products);
+    res.json({
+      data: {
+        products
+      }
+    });
   } catch (err) {
-    res.json({ message: err });
+    res.json({
+      data: {
+        message: err
+      }
+    });
   }
 });
 
@@ -166,9 +171,17 @@ router.post("/list/description", async (req, res) => {
     const products = await Product.find({
       description: { $regex: req.body.searchName }
     });
-    res.json(products);
+    res.json({
+      data: {
+        products
+      }
+    });
   } catch (err) {
-    res.json({ message: err });
+    res.json({
+      data: {
+        message: err
+      }
+    });
   }
 });
 
@@ -178,7 +191,9 @@ router.post("/add", (req, res, next) => {
     .then(product => {
       if (product.length >= 1) {
         return res.status(409).json({
-          message: "This product has already been added!"
+          data: {
+            message: "This product has already been added!"
+          }
         });
       } else {
         const product = new Product({
@@ -194,12 +209,16 @@ router.post("/add", (req, res, next) => {
           .save()
           .then(result => {
             res.status(201).json({
-              message: "Product added!"
+              data: {
+                message: "Product added!"
+              }
             });
           })
           .catch(err => {
             res.status(500).json({
-              message: err
+              data: {
+                message: err
+              }
             });
           });
       }
@@ -214,11 +233,17 @@ router.post("/delete", async (req, res) => {
   try {
     const removeProduct = await Product.deleteOne({ _id: req.body._id });
     res.json({
-      message: "Product deleted!",
-      removeProduct
+      data: {
+        message: "Product deleted!",
+        removeProduct
+      }
     });
   } catch (err) {
-    res.json({ message: err });
+    res.json({
+      data: {
+        message: err
+      }
+    });
   }
 });
 
@@ -238,9 +263,18 @@ router.post("/update", (req, res, next) => {
           }
         }
       );
-      res.json({ message: "Update name sccuessful!", updateProduct });
+      res.json({
+        data: {
+          message: "Update name sccuessful!",
+          updateProduct
+        }
+      });
     } catch (err) {
-      res.json({ message: err });
+      res.json({
+        data: {
+          message: err
+        }
+      });
     }
   });
 });
@@ -253,9 +287,18 @@ router.post("/update/status", (req, res, next) => {
         { _id: req.body._id },
         { $set: { status: req.body.status } }
       );
-      res.json({ message: "Update status sccuessful!", updateProductStatus });
+      res.json({
+        data: {
+          message: "Update status sccuessful!",
+          updateProductStatus
+        }
+      });
     } catch (err) {
-      res.json({ message: err });
+      res.json({
+        data: {
+          message: err
+        }
+      });
     }
   });
 });

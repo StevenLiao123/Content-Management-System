@@ -31,7 +31,7 @@ class AddForm extends Component {
                             <Select>
                                 <Option value='a'>Parent Category</Option>
                                 {
-                                    categories.map(category => <Option value={category._id}>{category.name}</Option>)
+                                    categories.map(category => <Option key={category._id} value={category._id}>{category.name}</Option>)
                                 }
                             </Select>
                         )

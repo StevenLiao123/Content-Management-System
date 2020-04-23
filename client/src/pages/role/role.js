@@ -46,7 +46,7 @@ class Role extends Component {
   getRoles = async () => {
     const result = await reqRoles();
     if (result) {
-      const roles = result.data;
+      const roles = result.data.roles;
       this.setState({
         roles
       });
@@ -75,12 +75,12 @@ class Role extends Component {
         const result = await reqAddRole(roleName);
         if (result) {
           message.success("Role added successful!");
-          const role = result.data;
+          const role = result.data.result;
           this.setState(state => ({
             roles: [...state.roles, role]
           }));
         } else {
-          message.success("Role added fail!");
+          message.error("Role added fail!");
         }
       }
     });
@@ -100,7 +100,7 @@ class Role extends Component {
 
     const result = await reqUpdateRole(role);
     if (result) {
-      message.success(result.message);
+      message.success(result.data.message);
       this.getRoles();
     }
   };

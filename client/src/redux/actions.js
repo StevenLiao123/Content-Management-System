@@ -38,7 +38,7 @@ export const login = (username, password) => {
         const result = await reqLogin(username, password);
         if (result) {
             // dispatch action with user if success
-            const user = result.data[0];
+            const user = result.data.user[0];
             // save the user to the local storage
             storageUtils.saveUser(user);
             message.success('Login successful!'); 

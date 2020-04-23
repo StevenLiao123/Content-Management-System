@@ -41,7 +41,7 @@ class ProductAddAndUpdate extends Component {
                     ? await reqUpdateProdcut(_id, name, description, price, images, detail) 
                     : await reqAddProduct(name, description, price, images, detail);
                 if (result) {
-                    message.success(result.message);
+                    message.success(result.data.message);
                     this.props.history.goBack();
                 } 
             }

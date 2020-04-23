@@ -57,9 +57,9 @@ class PicturesWall extends React.Component {
     // console.log('handleChange()', file.status, fileList.length, file);
     if(file.status === "done") {
       const result = file.response;
-      if(result.status === 1) {
+      if(result.data.status === 1) {
         message.success("Upload image successed!");
-        const {name, url} = result; 
+        const {name, url} = result.data; 
         file = fileList[fileList.length-1];
         file.name = name;
         file.url = url;
@@ -68,10 +68,10 @@ class PicturesWall extends React.Component {
       }
     } else if(file.status === "removed") {
       const result = await reqDeleteImage(file.name);
-      if(result.status === 1) {
-        message.success(result.message);
+      if(result.data.status === 1) {
+        message.success(result.data.message);
       } else {
-        message.error(result.message);
+        message.error(result.data.message);
       }
     }
     this.setState({ fileList })

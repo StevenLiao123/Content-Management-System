@@ -33,7 +33,7 @@ export default class ProductHome extends Component {
 
         const result = await reqDeleteProduct(_id);
         if(result) {
-            message.success(result.message);
+            message.success(result.data.message);
             this.getProducts();
         }
 
@@ -99,20 +99,21 @@ export default class ProductHome extends Component {
         const { searchName, searchType } = this.state;
 
         // get products based on name or description
-        let products;
+        let results;
         if (searchType === "name") {
-            products = await reqSearchProdcutsByName(searchName);
+            results = await reqSearchProdcutsByName(searchName);
         } else if (searchType === "description") {
-            products = await reqSearchProdcutsByDescription(searchName);
+            results = await reqSearchProdcutsByDescription(searchName);
         } else {
-            products = await reqProducts();
+            results = await reqProducts();
         }
 
         // get the products and update the state and then display the
         this.setState({ loading: false });  
-        if (products) {
+        console.log(results.data.products);
+        if (results) {
             this.setState({
-                products
+                products: results.data.products
             })
         } else {
             message.error('failed to get products!');
@@ -122,7 +123,7 @@ export default class ProductHome extends Component {
     updateProdcutsStatus = async(_id, status) => {
         const result = await reqUpdateProdcutsStatus(_id, status);
         if(result) {
-            message.success(result.message);
+            message.success(result.data.message);
             this.getProducts();
         }
 
