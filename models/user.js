@@ -15,8 +15,11 @@ const userSchema = mongoose.Schema({
     phone: {
         type: Number
     },
+    role: {
+        type: Object
+    },
     role_id: {
-        type: Number
+        type: String
     },
     create_time: {
         type: Number

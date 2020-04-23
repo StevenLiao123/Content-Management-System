@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const Role = require('../models/role');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -8,7 +9,13 @@ const jwt = require('jsonwebtoken');
 router.get('/', async (req, res) => {
     try {
         const users = await User.find();
-        res.json(users);
+        const roles = await Role.find();
+        res.json({
+            data: {
+                users,
+                roles
+            }
+        });
     } catch (err) {
         res.json({ message: err });
     }
@@ -39,8 +46,9 @@ router.post('/signup', (req, res, next) => {
                         password: hash,
                         email: req.body.email,
                         phone: req.body.phone,
+                        role: req.body.role,
                         role_id: req.body.role_id,
-                        create_time: req.body.create_time
+                        create_time: Date.now()
                     });
         
                     user.save()
@@ -102,6 +110,43 @@ router.post('/login', (req, res, next) => {
         });
 });
 
+// Add a new role
+router.post('/add', (req, res, next) => {
+    User.find({ username: req.body.username }).then(user => {
+        if (user.length >= 1) {
+            return res.status(409).json({
+                message: 'This user has already been created!'
+            });
+        } else {
+            const user = new User({
+                username: req.body.username,
+                password: req.body.password,
+                email: req.body.email,
+                phone: req.body.phone,
+                role: req.body.role,
+                role_id: req.body.role_id,
+                create_time: Date.now()
+            });
+
+            user.save()
+                .then(result => {
+                    res.status(201).json({
+                        data: result,
+                        message: 'User added!'
+                    });
+                })
+                .catch(err => {
+                    res.status(500).json({
+                        message: err
+                    });
+                });
+        }
+    }
+    ).catch(err => {
+        console.log(err);
+    });
+});
+
 //SPECIFIC USER
 router.get('/:postId', async (req, res) => {
     try {
@@ -113,11 +158,12 @@ router.get('/:postId', async (req, res) => {
 });
 
 //DELETE USER
-router.delete('/:username', async (req, res) => {
+router.post('/delete', async (req, res) => {
     try {
-        const removeUser = await User.remove({ username: req.params.username });
+        const removeUser = await User.deleteOne({ _id: req.body._id });
         res.json({
-            message: 'User deleted!'
+            message: 'User deleted!',
+            removeUser
         });
     } catch (err) {
         res.json({ message: err });

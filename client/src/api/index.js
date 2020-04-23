@@ -57,6 +57,16 @@ export const reqAddRole = (name) => ajax(BASE + '/role/add', {name}, 'POST');
 // update a role
 export const reqUpdateRole = (role) => ajax(BASE + '/role/update', role, 'POST');
 
+
+// get a list of users
+export const reqUsers = () => ajax(BASE + '/user');
+
+// delete an user
+export const reqDeleteUser = (_id) => ajax(BASE + '/user/delete', {_id}, 'POST');
+
+// add an new user
+export const reqAddUser = (user) => ajax(BASE + '/user/add', user, 'POST');
+
 // jsonp request for weather
 export const reqWeather = (city) => {
 
