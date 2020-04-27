@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 // the form for adding a role
 class AddForm extends Component {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.setForm(this.props.form);
   }
 

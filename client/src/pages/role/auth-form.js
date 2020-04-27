@@ -37,11 +37,11 @@ class AuthForm extends Component {
     });
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.treeNodes = this.getTreeNodes(menuList);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const menu = nextProps.role.menu;
     this.setState({
       checkedKeys: menu

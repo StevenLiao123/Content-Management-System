@@ -178,7 +178,7 @@ export default class Category extends Component {
     }
 
     // used to load data before the first render
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.initColumns();
     }
 

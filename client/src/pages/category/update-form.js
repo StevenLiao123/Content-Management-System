@@ -10,7 +10,7 @@ class UpdateForm extends Component {
         setForm: Proptypes.func.isRequired
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         // pass the form to the parent component by invoking the setForm()
         this.props.setForm(this.props.form);
     }

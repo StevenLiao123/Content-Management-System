@@ -55,7 +55,7 @@ class ProductAddAndUpdate extends Component {
         callback("The price must be larger than 0");
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const product = this.props.location.state;
         this.isUpdate = !!product;
         this.product = product || {};

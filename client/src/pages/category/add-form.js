@@ -14,7 +14,7 @@ class AddForm extends Component {
         parentId: PropTypes.string.isRequired // the id of sub-categories
     };
 
-    componentWillMount () {
+    UNSAFE_componentWillMount () {
         this.props.setForm(this.props.form);
     }
 
