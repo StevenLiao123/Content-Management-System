@@ -21,13 +21,13 @@ class UserForm extends PureComponent {
     }
 }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.setForm(this.props.form);
   }
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { roles } = this.props;
+    const { roles, selectedUser } = this.props;
     const formItemLayout = {
       labelCol: { span: 6 }, // set up the width of the left side of the label
       wrapperCol: { span: 15 } // set up the width of the input
@@ -37,7 +37,7 @@ class UserForm extends PureComponent {
       <Form {...formItemLayout}>
         <Form.Item label="Name">
           {getFieldDecorator("username", {
-            initialValue: "",
+            initialValue: selectedUser.username,
             rules: [
               {
                   whitespace: true,
@@ -59,19 +59,23 @@ class UserForm extends PureComponent {
           })(<Input placeholder="Please input an user name" />)}
         </Form.Item>
 
-        <Form.Item label="Password">
-          {getFieldDecorator("password", {
-            initialValue: "",
-            rules: [
-              {
-                  validator: this.validatePassword
-              }],
-          })(<Input type="password" placeholder="Please input a password" />)}
-        </Form.Item>
+        {
+          !selectedUser._id ? (
+            <Form.Item label="Password">
+            {getFieldDecorator("password", {
+              initialValue: "",
+              rules: [
+                {
+                    validator: this.validatePassword
+                }],
+            })(<Input type="password" placeholder="Please input a password" />)}
+          </Form.Item>
+          ) : null
+        }
 
         <Form.Item label="Phone">
           {getFieldDecorator("phone", {
-            initialValue: "",
+            initialValue: selectedUser.phone,
             rules: [
               {
                 message: "Please input a phone!"
@@ -82,7 +86,7 @@ class UserForm extends PureComponent {
 
         <Form.Item label="Email">
           {getFieldDecorator("email", {
-            initialValue: "",
+            initialValue: selectedUser.email,
             rules: [
               {
                   whitespace: true,
@@ -102,7 +106,7 @@ class UserForm extends PureComponent {
 
         <Form.Item label="Role">
           {getFieldDecorator("role_id", {
-            initialValue: "",
+            initialValue: selectedUser.role_id,
             rules: [
               {
                 message: "Please select a role!"
@@ -123,7 +127,8 @@ class UserForm extends PureComponent {
 
 UserForm.propTypes = {
   setForm: PropTypes.func.isRequired, // the function for transfering the objects of form
-  roles: PropTypes.array.isRequired
+  roles: PropTypes.array.isRequired,
+  selectedUser: PropTypes.object
 };
 
 export default Form.create()(UserForm);

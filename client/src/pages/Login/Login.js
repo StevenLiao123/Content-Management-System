@@ -46,7 +46,7 @@ class Login extends Component {
 
     render() {
         // jump into the managment page if the user has already been signed in 
-        const user = this.props.user;
+        const user = this.props.user || {};
         if(user && user._id) {
             return <Redirect to='/home' />;
         }

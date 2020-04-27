@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const User = require("../models/user");
 const Role = require("../models/role");
 
 // get back all roles
@@ -79,7 +80,6 @@ router.post("/update", (req, res, next) => {
       );
       res.json({
         data: {
-          message: "Update role sccuessful!",
           updateRole
         }
       });

@@ -64,8 +64,8 @@ export const reqUsers = () => ajax(BASE + '/user');
 // delete an user
 export const reqDeleteUser = (_id) => ajax(BASE + '/user/delete', {_id}, 'POST');
 
-// add an new user
-export const reqAddUser = (user) => ajax(BASE + '/user/add', user, 'POST');
+// add or update an new user
+export const reqAddOrUpdateUser = (user) => ajax(BASE + '/user' + (user._id ? '/update' : '/add'), user, 'POST');
 
 // jsonp request for weather
 export const reqWeather = (city) => {

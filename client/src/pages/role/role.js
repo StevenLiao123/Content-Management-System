@@ -1,11 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { Card, Button, Table, Modal, message } from "antd";
 import { ROLE_PAGE_SIZE } from "../../utils/constants";
 import { reqRoles, reqAddRole, reqUpdateRole } from "../../api";
 import { formatDate } from "../../utils/dateUtils";
 import AddForm from "./add-form";
 import AuthForm from "./auth-form";
+import memoryUtils from "../../utils/memoryUtils";
+import storageUtils from "../../utils/storageUtils";
+import { logout } from "../../redux/actions";
 
 class Role extends Component {
   constructor(props) {
@@ -100,12 +104,19 @@ class Role extends Component {
 
     const result = await reqUpdateRole(role);
     if (result) {
-      message.success(result.data.message);
-      this.getRoles();
+      // Return back to login page if the current role equal to the user itself
+      if (role._id === storageUtils.getUser().role_id) {
+        memoryUtils.user = {};
+        this.props.logout();
+        message.success("The role has been changed, please sign-in again");
+      } else {
+        message.success("Update role sccuessful!");
+        this.getRoles();
+      }
     }
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.initColumn();
   }
 
@@ -114,6 +125,11 @@ class Role extends Component {
   }
 
   render() {
+    const user = this.props.user;
+    if (!user || !user.username) {
+      return <Redirect to="/login" />;
+    }
+
     const {
       roles,
       role,
@@ -148,7 +164,15 @@ class Role extends Component {
           dataSource={roles}
           columns={this.columns}
           pagination={{ defaultPageSize: ROLE_PAGE_SIZE }}
-          rowSelection={{ type: "radio", selectedRowKeys: [role._id] }}
+          rowSelection={{
+            type: "radio",
+            selectedRowKeys: [role._id],
+            onSelect: role => {
+              this.setState({
+                role
+              });
+            }
+          }}
           onRow={this.onRow}
         />
 
@@ -186,4 +210,4 @@ class Role extends Component {
   }
 }
 
-export default connect(state => ({ user: state.user }))(Role);
+export default connect(state => ({ user: state.user }), { logout })(Role);

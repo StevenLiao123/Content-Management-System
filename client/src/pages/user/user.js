@@ -3,7 +3,7 @@ import { Card, Button, Table, Modal, message } from "antd";
 import { formatDate } from '../../utils/dateUtils';
 import LinkButton from '../../components/link-button';
 import { USER_PAGE_SIZE } from '../../utils/constants';
-import { reqUsers, reqDeleteUser, reqAddUser } from '../../api';
+import { reqUsers, reqDeleteUser, reqAddOrUpdateUser } from '../../api';
 import UserForm from './user-form';
 
 export default class User extends Component {
@@ -41,7 +41,7 @@ export default class User extends Component {
             title: "Action",
             render: (user) => (
                 <span>
-                    <LinkButton>Edit</LinkButton>
+                    <LinkButton onClick={() => this.showUpdate(user)}>Edit</LinkButton>
                     <LinkButton onClick={() => this.deleteUser(user)}>Delete</LinkButton>
                 </span>
             )
@@ -56,6 +56,20 @@ export default class User extends Component {
       },{});
 
       this.roleNames = roleNames;
+  }
+
+  showAdd = () => {
+    this.user = null; // remove the selected user
+    this.setState({
+      isShowUserStatus: true
+    });
+  }
+
+  showUpdate = (user) => {
+      this.user = user; // save user to this
+      this.setState({
+          isShowUserStatus: true
+      });
   }
 
   deleteUser = (user) => {
@@ -75,9 +89,21 @@ export default class User extends Component {
     const user = this.form.getFieldsValue();
     this.form.resetFields();
 
-    const result = await reqAddUser(user);
+    // if the selected user exists, then assign the user id to the user object
+    if(this.user && this.user._id) {
+        user._id = this.user._id;
+    }
+
+
+    const result = await reqAddOrUpdateUser(user);
     if(result) {
-        message.success("The user has been created!");
+        message.success(`The user has been ${this.user ? "updated!" : "created!"}`);
+        // if(this.user) {
+        //   const user = storageUtils.getUser();
+        //   console.log(user)
+        // } else {
+        //   const user = storageUtils.getUser();
+        // }
         this.getUsers();
     }
     this.setState({
@@ -97,7 +123,7 @@ export default class User extends Component {
     }   
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
       this.initColumns();
   }
 
@@ -107,7 +133,8 @@ export default class User extends Component {
 
   render() {
     const { users, roles, isShowUserStatus } = this.state;
-    const title = <Button type="primary" onClick={() => this.setState({isShowUserStatus: true})}>Create a new user</Button>;
+    const user = this.user || {};
+    const title = <Button type="primary" onClick={this.showAdd}>Create a new user</Button>;
 
     return (
       <Card title={title}>
@@ -122,14 +149,20 @@ export default class User extends Component {
         />
 
         <Modal
-          title="Add a User"
+          title={user._id ? "Update an user" : "Create an new user"}
           visible={isShowUserStatus}
           onOk={this.addOrUpdateUser}
-          onCancel={() => this.setState({isShowUserStatus: false})}
+          onCancel={() => {
+            this.form.resetFields()
+            this.setState({
+              isShowUserStatus: false
+            });
+          }}
         >
           <UserForm 
             setForm={form => this.form = form}
             roles={roles}
+            selectedUser={user}
             />
         </Modal>
       </Card>
