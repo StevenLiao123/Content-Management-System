@@ -25,16 +25,10 @@ router.get("/", async (req, res) => {
   }
 });
 
-/*
-router.get('/specific', (req, res) => {
-    res.send("The specific message!");
-});
-*/
-
 // Create a new user
 router.post("/signup", (req, res, next) => {
   bcrypt.hash(req.body.password, 10, (err, hash) => {
-    User.find({ username: req.body.username }).then(user => {
+    User.find({ username: req.body.username }).then(async user => {
       if (user.length >= 1) {
         return res.status(409).json({
           data: {
@@ -54,10 +48,11 @@ router.post("/signup", (req, res, next) => {
             password: hash,
             email: req.body.email,
             phone: req.body.phone,
-            role: req.body.role,
-            role_id: req.body.role_id,
+            role:  await Role.findById("5e8fd7775583a73fd954f8ed"),
+            role_id: "5e8fd7775583a73fd954f8ed",
             create_time: Date.now()
           });
+          console.log(Role.findById("5e8fd7775583a73fd954f8ed"));
 
           user
             .save()

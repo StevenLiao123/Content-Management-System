@@ -1,12 +1,16 @@
 import React, { Component } from "react";
 import { Card, Button, Table, Modal, message } from "antd";
+import { connect } from "react-redux";
 import { formatDate } from '../../utils/dateUtils';
 import LinkButton from '../../components/link-button';
 import { USER_PAGE_SIZE } from '../../utils/constants';
 import { reqUsers, reqDeleteUser, reqAddOrUpdateUser } from '../../api';
 import UserForm from './user-form';
+import storageUtils from "../../utils/storageUtils";
+import memoryUtils from "../../utils/memoryUtils";
+import { logout } from "../../redux/actions";
 
-export default class User extends Component {
+class User extends Component {
   state = {
       users: [],
       roles: [],
@@ -94,17 +98,16 @@ export default class User extends Component {
         user._id = this.user._id;
     }
 
-
     const result = await reqAddOrUpdateUser(user);
     if(result) {
+      if (user._id === storageUtils.getUser()._id) {
+        memoryUtils.user = {};
+        this.props.logout();
+        message.success("The user's role has been changed, please sign-in again");
+      } else {
         message.success(`The user has been ${this.user ? "updated!" : "created!"}`);
-        // if(this.user) {
-        //   const user = storageUtils.getUser();
-        //   console.log(user)
-        // } else {
-        //   const user = storageUtils.getUser();
-        // }
         this.getUsers();
+      }
     }
     this.setState({
         isShowUserStatus: false
@@ -169,3 +172,5 @@ export default class User extends Component {
     );
   }
 }
+
+export default connect(state => ({ user: state.user }), { logout })(User);
