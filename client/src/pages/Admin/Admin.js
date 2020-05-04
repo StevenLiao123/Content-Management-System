@@ -12,6 +12,7 @@ import User from '../user/user';
 import BarChart from '../charts/barChart';
 import LineChart from '../charts/lineChart';
 import PieChart from '../charts/pieChart';
+import NotFound from '../not-found/not-found';
 
 import './Admin.less';
 
@@ -34,6 +35,7 @@ class Admin extends Component {
                     <Header> Header </Header>
                     <Content style={{margin: 20, backgroundColor: '#fff'}}>
                         <Switch>
+                            <Redirect exact from='/' to='/home' />
                             <Route path='/home' component={Home} />
                             <Route path='/category' component={Category} />
                             <Route path='/product' component={Product} />
@@ -42,7 +44,7 @@ class Admin extends Component {
                             <Route path='/barChart' component={BarChart} />
                             <Route path='/lineChart' component={LineChart} />
                             <Route path='/pieChart' component={PieChart} />
-                            <Redirect to='/home' />
+                            <Route component={NotFound} />
                         </Switch>
                     </Content>
                     <Footer style={{color: 'grey', textAlign: 'center'}}>Footer</Footer>
