@@ -1,11 +1,62 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { Card, Button } from "antd";
+import ReactEcharts from "echarts-for-react";
 
 export default class BarChart extends Component {
-    render() {
-        return (
-            <div className="bar-chart">
-                barChart
-            </div>
-        )
-    }
+  state = {
+    salesVolume: [5, 20, 36, 10, 10, 20],
+    stocks: [6, 10, 16, 30, 11, 8]
+  };
+
+  update = () => {
+      this.setState(state => ({
+          salesVolume: state.salesVolume.map(sale => sale + 1),
+          stocks: state.stocks.map(stock => stock - 1)
+      }));
+  };
+
+  getOption = (salesVolume, stocks) => {
+    return {
+      title: {
+        text: "ECharts"
+      },
+      tooltip: {},
+      legend: {
+        data: ["Sales Volume", "Stock"]
+      },
+      xAxis: {
+        data: ["Appliances", "Books", "Computers", "Colthes", "Foods", "Drinks"]
+      },
+      yAxis: {},
+      series: [
+        {
+          name: "Sales Volume",
+          type: "bar",
+          data: salesVolume
+        },
+        {
+          name: "Stock",
+          type: "bar",
+          data: stocks
+        }
+      ]
+    };
+  };
+
+  render() {
+    const { salesVolume, stocks } = this.state;
+
+    return (
+      <div>
+        <Card>
+          <Button type="primary" onClick={this.update}>
+            Update
+          </Button>
+        </Card>
+        <Card title="Bar Chart">
+          <ReactEcharts option={this.getOption(salesVolume, stocks)} />
+        </Card>
+      </div>
+    );
+  }
 }
