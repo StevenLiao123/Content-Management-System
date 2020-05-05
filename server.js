@@ -16,19 +16,19 @@ app.use(bodyParser.json());
 
 // get the route of user
 const userRoute = require('./routes/user');
-app.use('/user', userRoute);
+app.use('/data/user', userRoute);
 
 // get the route of category
 const categoryRoute = require('./routes/category');
-app.use('/category', categoryRoute);
+app.use('/data/category', categoryRoute);
 
 // get the route of product
 const productRoute = require('./routes/product');
-app.use('/product', productRoute);
+app.use('/data/product', productRoute);
 
 // get the route of role
 const roleRoute = require('./routes/role');
-app.use('/role', roleRoute);
+app.use('/data/role', roleRoute);
 
 //Connect to DB
 mongoose.set('useUnifiedTopology', true);
