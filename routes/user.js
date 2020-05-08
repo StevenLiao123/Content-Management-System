@@ -4,6 +4,7 @@ const User = require("../models/user");
 const Role = require("../models/role");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const checkAuth = require("../middleware/check-auth");
 
 // GET BACK ALL THE USERS
 router.get("/", async (req, res) => {
@@ -48,18 +49,18 @@ router.post("/signup", (req, res, next) => {
             password: hash,
             email: req.body.email,
             phone: req.body.phone,
-            role:  await Role.findById("5e8fd7775583a73fd954f8ed"),
+            role: await Role.findById("5e8fd7775583a73fd954f8ed"),
             role_id: "5e8fd7775583a73fd954f8ed",
             create_time: Date.now()
           });
-          console.log(Role.findById("5e8fd7775583a73fd954f8ed"));
 
           user
             .save()
             .then(result => {
               res.status(201).json({
                 data: {
-                  message: "User created!"
+                  message: "User created!",
+                  user
                 }
               });
             })
@@ -87,49 +88,54 @@ router.post("/login", (req, res, next) => {
           }
         });
       }
-      bcrypt.compare(req.body.password, user[0].password, async (err, result) => {
-        if (err) {
-          return res.status(401).json({
-            data: {
-              message: "User name or password incorrect!"
-            }
-          });
-        } else if (result) {
-          const token = jwt.sign(
-            {
-              username: user[0].username,
-              userId: user[0]._id
-            },
-            process.env.JWT_KEY,
-            {
-              expiresIn: "1h"
-            }
-          );
-
-          const updateUser = await User.updateMany(
-            { username: req.body.username },
-            {
-              $set: {
-                role: await Role.find({ _id: user[0].role_id }),
+      bcrypt.compare(
+        req.body.password,
+        user[0].password,
+        async (err, result) => {
+          if (err) {
+            return res.status(401).json({
+              data: {
+                message: "User name or password incorrect!"
               }
-            }
-          );
+            });
+          } else if (result) {
+            const token = jwt.sign(
+              {
+                username: user[0].username,
+                userId: user[0]._id
+              },
+              process.env.JWT_KEY,
+              {
+                expiresIn: "1h"
+              }
+            );
 
-          return res.status(200).json({
+            const updateUser = await User.updateMany(
+              { username: req.body.username },
+              {
+                $set: {
+                  role: await Role.find({ _id: user[0].role_id })
+                }
+              }
+            );
+
+            return res.status(200).json({
+              data: {
+                status: "1",
+                message: "Authentication successful!",
+                user: await User.find({ username: req.body.username }),
+                updateUser,
+                token: token
+              }
+            });
+          }
+          res.status(401).json({
             data: {
-              message: "Authentication successful!",
-              user: await User.find({ username: req.body.username }),
-              updateUser,
-              token: token
+              message: "Sorry, user name or password incorrect!"
             }
           });
         }
-        res.status(401).json({
-          data: {
-            message: "Sorry, user name or password incorrect!"
-          }
-        });
-      });
+      );
     })
     .catch(err => {
       res.status(500).json({
@@ -140,8 +146,8 @@ router.post("/login", (req, res, next) => {
     });
 });
 
-// Add a new role
-router.post("/add", (req, res, next) => {
+// Add a new role (protected route)
+router.post("/add", checkAuth, (req, res, next) => {
   bcrypt.hash(req.body.password, 10, (err, hash) => {
     User.find({ username: req.body.username })
       .then(async user => {
@@ -155,7 +161,7 @@ router.post("/add", (req, res, next) => {
             password: hash,
             email: req.body.email,
             phone: req.body.phone,
-            role:  await Role.find({ _id: req.body.role_id }),
+            role: await Role.find({ _id: req.body.role_id }),
             role_id: req.body.role_id,
             create_time: Date.now()
           });
@@ -165,6 +171,7 @@ router.post("/add", (req, res, next) => {
             .then(async user => {
               res.status(201).json({
                 data: {
+                  status: "1",
                   user,
                   message: "User added!"
                 }
@@ -199,13 +206,16 @@ router.get("/:postId", async (req, res) => {
   }
 });
 
-//DELETE USER
-router.post("/delete", async (req, res) => {
+//DELETE USER (protected route)
+router.post("/delete", checkAuth, async (req, res) => {
   try {
     const removeUser = await User.deleteOne({ _id: req.body._id });
     res.json({
-      message: "User deleted!",
-      removeUser
+      data: {
+        status: "1",
+        message: "User deleted!",
+        removeUser
+      }
     });
   } catch (err) {
     res.json({
@@ -216,8 +226,8 @@ router.post("/delete", async (req, res) => {
   }
 });
 
-// update an user
-router.post("/update", (req, res, next) => {
+// update an user (protected route)
+router.post("/update", checkAuth, (req, res, next) => {
   Role.find({ _id: req.body._id }, async () => {
     try {
       const updateUser = await User.updateMany(
@@ -234,6 +244,7 @@ router.post("/update", (req, res, next) => {
       );
       res.json({
         data: {
+          status: "1",
           message: "Update user sccuessful!",
           updateUser
         }

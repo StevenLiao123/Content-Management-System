@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Category = require("../models/category");
+const checkAuth = require('../middleware/check-auth');
 
 // get back all categories
 router.get("/", async (req, res) => {
@@ -32,8 +33,8 @@ router.post("/list", async (req, res) => {
   }
 });
 
-// Create a new category
-router.post("/add", (req, res, next) => {
+// Create a new category (protected route)
+router.post("/add", checkAuth, (req, res, next) => {
   Category.find({ name: req.body.name })
     .then(category => {
       if (category.length >= 1) {
@@ -53,7 +54,8 @@ router.post("/add", (req, res, next) => {
           .then(result => {
             res.status(201).json({
               data: {
-                message: "Category added!"
+                message: "Category added!",
+                status: "1"
               }
             });
           })
@@ -71,12 +73,13 @@ router.post("/add", (req, res, next) => {
     });
 });
 
-// delete a category
-router.delete("/:name", async (req, res) => {
+// delete a category (protected route)
+router.delete("/:name", checkAuth, async (req, res) => {
   try {
     const removeCategory = await Category.deleteOne({ name: req.params.name });
     res.json({
       data: {
+        status: "1",
         message: "Category deleted!",
         removeCategory
       }
@@ -90,8 +93,8 @@ router.delete("/:name", async (req, res) => {
   }
 });
 
-// update a category
-router.post("/update", (req, res, next) => {
+// update a category (protected route)
+router.post("/update", checkAuth, (req, res, next) => {
   Category.find({ _id: req.body._id }, async () => {
     try {
       const updateCategory = await Category.updateOne(
@@ -100,6 +103,7 @@ router.post("/update", (req, res, next) => {
       );
       res.json({
         data: {
+          status: "1",
           message: "Update sccuessful!",
           updateCategory
         }

@@ -6,6 +6,7 @@ const multerS3 = require("multer-s3");
 const multer = require("multer");
 const path = require("path");
 const url = require("url");
+const checkAuth = require('../middleware/check-auth');
 
 // get back all products
 router.get("/", async (req, res) => {
@@ -77,8 +78,9 @@ function checkFileType(file, cb) {
  * @route POST api/product/profile-img-upload
  * @desc Upload post image
  * @access public
+ * protected route
  */
-router.post("/profile-img-upload", (req, res) => {
+router.post("/profile-img-upload", checkAuth, (req, res) => {
   profileImgUpload(req, res, error => {
     if (error) {
       res.json({
@@ -98,7 +100,7 @@ router.post("/profile-img-upload", (req, res) => {
         // Response the status, name and url
         res.json({
           data: {
-            status: 1,
+            status: "1",
             name: imageName,
             url: imageLocation
           }
@@ -112,8 +114,9 @@ router.post("/profile-img-upload", (req, res) => {
  * @route POST api/product/profile-img-upload/delete
  * @desc delete an image
  * @access public
+ * protected route
  */
-router.post("/profile-img-upload/delete", (req, res) => {
+router.post("/profile-img-upload/delete", checkAuth, (req, res) => {
   try {
     if (req.body.imageName) {
       var params = {
@@ -125,7 +128,7 @@ router.post("/profile-img-upload/delete", (req, res) => {
           // successful response
           res.json({
             data: {
-              status: 1,
+              status: "1",
               message: "delete image successed"
             }
           });
@@ -133,7 +136,6 @@ router.post("/profile-img-upload/delete", (req, res) => {
           // response failed
           res.json({
             data: {
-              status: 0,
               message: "delete image failed"
             }
           });
@@ -185,8 +187,8 @@ router.post("/list/description", async (req, res) => {
   }
 });
 
-// Create a new product
-router.post("/add", (req, res, next) => {
+// Create a new product (protected route)
+router.post("/add", checkAuth, (req, res, next) => {
   Product.find({ name: req.body.name })
     .then(product => {
       if (product.length >= 1) {
@@ -210,6 +212,7 @@ router.post("/add", (req, res, next) => {
           .then(result => {
             res.status(201).json({
               data: {
+                status: "1",
                 message: "Product added!"
               }
             });
@@ -228,12 +231,13 @@ router.post("/add", (req, res, next) => {
     });
 });
 
-// delete a product
-router.post("/delete", async (req, res) => {
+// delete a product (protected route)
+router.post("/delete", checkAuth, async (req, res) => {
   try {
     const removeProduct = await Product.deleteOne({ _id: req.body._id });
     res.json({
       data: {
+        status: "1",
         message: "Product deleted!",
         removeProduct
       }
@@ -247,8 +251,8 @@ router.post("/delete", async (req, res) => {
   }
 });
 
-// update a product
-router.post("/update", (req, res, next) => {
+// update a product (protected route)
+router.post("/update", checkAuth, (req, res, next) => {
   Product.find({ _id: req.body._id }, async () => {
     try {
       const updateProduct = await Product.updateMany(
@@ -265,6 +269,7 @@ router.post("/update", (req, res, next) => {
       );
       res.json({
         data: {
+          status: "1",
           message: "Update name sccuessful!",
           updateProduct
         }
@@ -279,8 +284,8 @@ router.post("/update", (req, res, next) => {
   });
 });
 
-// update a product's status
-router.post("/update/status", (req, res, next) => {
+// update a product's status (protected route)
+router.post("/update/status", checkAuth, (req, res, next) => {
   Product.find({ _id: req.body._id }, async () => {
     try {
       const updateProductStatus = await Product.updateOne(
@@ -289,6 +294,7 @@ router.post("/update/status", (req, res, next) => {
       );
       res.json({
         data: {
+          status: "1",
           message: "Update status sccuessful!",
           updateProductStatus
         }

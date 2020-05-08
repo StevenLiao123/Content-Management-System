@@ -4,6 +4,7 @@
 import store from 'store';
 
 const USER_KEY = 'user_key';
+const TOKEN_KEY = 'token_key';
 
 export default {
     // save user
@@ -22,5 +23,20 @@ export default {
     removeUser() {
         //localStorage.removeItem(USER_KEY);
         store.remove(USER_KEY);
+    },
+
+    // save token
+    saveToken(token) {
+        store.set(TOKEN_KEY, token);
+    },
+
+    // read token
+    getToken() {
+        return store.get(TOKEN_KEY) || "";
+    },
+
+    // remove token
+    removeToken() {
+        store.remove(TOKEN_KEY);
     }
 }

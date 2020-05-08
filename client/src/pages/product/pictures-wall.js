@@ -1,8 +1,11 @@
 import React from 'react';
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Upload, Modal, message, Icon } from 'antd';
 import { reqDeleteImage } from '../../api';
 import { BASE, BASE_IMG_AWS_URL } from '../../utils/constants';
+import memoryUtils from "../../utils/memoryUtils";
+import { logout } from "../../redux/actions";
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -54,22 +57,29 @@ class PicturesWall extends React.Component {
   };
 
   handleChange = async ({ file, fileList }) => {
-    // console.log('handleChange()', file.status, fileList.length, file);
     if(file.status === "done") {
       const result = file.response;
-      if(result.data.status === 1) {
+      if(result.data.status === "1") {
         message.success("Upload image successed!");
         const {name, url} = result.data; 
         file = fileList[fileList.length-1];
         file.name = name;
         file.url = url;
+      } else if (result.data.status === "0") {
+        memoryUtils.user = {};
+        memoryUtils.token = "";
+        this.props.logout();
       } else {
         message.error("Upload image failed");
       }
     } else if(file.status === "removed") {
       const result = await reqDeleteImage(file.name);
-      if(result.data.status === 1) {
+      if(result.data.status === "1") {
         message.success(result.data.message);
+      } else if (result.data.status === "0") {
+        memoryUtils.user = {};
+        memoryUtils.token = "";
+        this.props.logout();
       } else {
         message.error(result.data.message);
       }
@@ -90,6 +100,9 @@ class PicturesWall extends React.Component {
       <div className="clearfix">
         <Upload
           action={`${BASE}/product/profile-img-upload`}
+          headers={{
+            Authorization: `Bearer ${this.props.token}`
+          }}
           accept="image/*,.pdf"
           name="profileImage"
           listType="picture-card"
@@ -113,4 +126,10 @@ PicturesWall.propTypes = {
   showPictureWallModal: PropTypes.bool,
 };
 
-export default PicturesWall;
+// connect the store of redux and forwardRef allows the connected wrapper component to pass refs as if it wasn’t connected.
+export default connect(
+  state => ({token: state.token}), 
+  { logout },
+  null,
+  {forwardRef: true}
+)(PicturesWall);

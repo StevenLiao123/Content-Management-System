@@ -6,7 +6,6 @@ import LinkButton from '../../components/link-button';
 import { USER_PAGE_SIZE } from '../../utils/constants';
 import { reqUsers, reqDeleteUser, reqAddOrUpdateUser } from '../../api';
 import UserForm from './user-form';
-import storageUtils from "../../utils/storageUtils";
 import memoryUtils from "../../utils/memoryUtils";
 import { logout } from "../../redux/actions";
 
@@ -81,9 +80,13 @@ class User extends Component {
           title: `Do you want to delete ${user.username} ?`,
           onOk: async () => {
             const result = await reqDeleteUser(user._id);
-            if(result) {
-                message.success(`${user.username} has been deleted!`);
-                this.getUsers();
+            if (result.data.status === "1") {
+              message.success(`${user.username} has been deleted!`);
+              this.getUsers();
+            } else if (result.data.status === "0") {
+              memoryUtils.user = {};
+              memoryUtils.token = "";
+              this.props.logout();
             }
           }
       });
@@ -99,8 +102,8 @@ class User extends Component {
     }
 
     const result = await reqAddOrUpdateUser(user);
-    if(result) {
-      if (user._id === storageUtils.getUser()._id) {
+    if (result.data.status === "1") {
+      if (user._id === this.props.user._id) {
         memoryUtils.user = {};
         this.props.logout();
         message.success("The user's role has been changed, please sign-in again");
@@ -108,6 +111,10 @@ class User extends Component {
         message.success(`The user has been ${this.user ? "updated!" : "created!"}`);
         this.getUsers();
       }
+    } else if (result.data.status === "0") {
+      memoryUtils.user = {};
+      memoryUtils.token = "";
+      this.props.logout();
     }
     this.setState({
         isShowUserStatus: false

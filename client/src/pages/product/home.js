@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Card, Select, Input, Button, Icon, Table, message } from "antd";
-
+import { connect } from "react-redux";
 import {
   reqProducts,
   reqSearchProdcutsByName,
@@ -9,6 +9,8 @@ import {
   reqDeleteProduct
 } from "../../api";
 import { PRODUCT_PAGE_SIZE } from "../../utils/constants";
+import memoryUtils from "../../utils/memoryUtils";
+import { logout } from "../../redux/actions";
 
 import LinkButton from "../../components/link-button";
 /*
@@ -17,7 +19,7 @@ import LinkButton from "../../components/link-button";
 
 const Option = Select.Option;
 
-export default class ProductHome extends Component {
+class ProductHome extends Component {
   state = {
     products: [],
     loading: false, // used to determine whether it is in the process of getting data,
@@ -30,9 +32,13 @@ export default class ProductHome extends Component {
     this.setState({ loading: true });
 
     const result = await reqDeleteProduct(_id);
-    if (result) {
+    if (result.data.status === "1") {
       message.success(result.data.message);
       this.getProducts();
+    } else if (result.data.status === "0") {
+      memoryUtils.user = {};
+      memoryUtils.token = "";
+      this.props.logout();
     }
   };
 
@@ -131,9 +137,13 @@ export default class ProductHome extends Component {
 
   updateProdcutsStatus = async (_id, status) => {
     const result = await reqUpdateProdcutsStatus(_id, status);
-    if (result) {
+    if (result.data.status === "1") {
       message.success(result.data.message);
       this.getProducts();
+    } else if (result.data.status === "0") {
+      memoryUtils.user = {};
+      memoryUtils.token = "";
+      this.props.logout();
     }
   };
 
@@ -197,3 +207,8 @@ export default class ProductHome extends Component {
     );
   }
 }
+
+export default connect(
+  null, 
+  { logout }
+)(ProductHome);

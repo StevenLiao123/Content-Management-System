@@ -77,12 +77,16 @@ class Role extends Component {
         const { roleName } = values;
         this.form.resetFields();
         const result = await reqAddRole(roleName);
-        if (result) {
+        if (result.data.status === "1") {
           message.success("Role added successful!");
           const role = result.data.result;
           this.setState(state => ({
             roles: [...state.roles, role]
           }));
+        } else if (result.data.status === "0") {
+          memoryUtils.user = {};
+          memoryUtils.token = "";
+          this.props.logout();
         } else {
           message.error("Role added fail!");
         }
@@ -103,7 +107,7 @@ class Role extends Component {
     role.auth_name = auth_name;
 
     const result = await reqUpdateRole(role);
-    if (result) {
+    if (result.data.status === "1") {
       // Return back to login page if the current role equal to the user itself
       if (role._id === storageUtils.getUser().role_id) {
         memoryUtils.user = {};
@@ -113,6 +117,10 @@ class Role extends Component {
         message.success("Update role sccuessful!");
         this.getRoles();
       }
+    } else if (result.data.status === "0") {
+      memoryUtils.user = {};
+      memoryUtils.token = "";
+      this.props.logout();
     }
   };
 
