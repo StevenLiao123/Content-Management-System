@@ -54,22 +54,24 @@ class Category extends Component {
     // const { parentId } = this.state;
     parentId = parentId || this.state.parentId;
 
-    const categories = await reqCategories(parentId);
+    const result = await reqCategories(parentId);
 
     this.setState({ loading: false });
 
-    if (categories) {
+    if (result.data.status === "1") {
       if (parentId === "a") {
         this.setState({
-          categories
+          categories: result.data.categoriesByParentId
         });
       } else {
         this.setState({
-          subCategories: categories
+          subCategories: result.data.categoriesByParentId
         });
       }
-    } else {
-      message.error("failed to get category!");
+    } else if (result.data.status === "0") {
+      memoryUtils.user = {};
+      memoryUtils.token = "";
+      this.props.logout();
     }
   };
 

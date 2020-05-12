@@ -2,7 +2,7 @@
     The moudle to contain some constants
 */
 
-export const BASE = process.env.NODE_ENV === "production" ? "https://floating-beyond-26711.herokuapp.com/data" : "http://localhost:8080/data"; // the base url of the project based on the development environment
+export const BASE = process.env.NODE_ENV === "production" ? "https://floating-beyond-26711.herokuapp.com/api" : "http://localhost:8080/api"; // the base url of the project based on the development environment
 export const CATEGORY_PAGE_SIZE = 6; // the default page size of product
 export const PRODUCT_PAGE_SIZE = 5; // the default page size of product
 export const ROLE_PAGE_SIZE = 6;

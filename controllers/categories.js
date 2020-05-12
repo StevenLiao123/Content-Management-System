@@ -1,29 +1,30 @@
-const express = require("express");
-const router = express.Router();
-const Category = require("../models/category");
-const checkAuth = require('../middleware/check-auth');
+const Category = require('../models/category');
 
-// get back all categories
-router.get("/", async (req, res) => {
+exports.categories_get_all = async (req, res) => {
   try {
     const allCategories = await Category.find();
     res.json(allCategories);
   } catch (err) {
     res.json({
       data: {
+        status: "1",
         message: err
       }
     });
   }
-});
+};
 
-// get a list of categories based on the parentId
-router.post("/list", async (req, res) => {
+exports.categories_get_all_by_parentId = async (req, res) => {
   try {
     const categoriesByParentId = await Category.find({
       parentId: req.body.parentId
     });
-    res.json(categoriesByParentId);
+    res.json({
+      data: {
+        status: "1",
+        categoriesByParentId
+      }
+    });
   } catch (err) {
     res.json({
       data: {
@@ -31,10 +32,9 @@ router.post("/list", async (req, res) => {
       }
     });
   }
-});
+};
 
-// Create a new category (protected route)
-router.post("/add", checkAuth, (req, res, next) => {
+exports.categories_add_new_one = (req, res, next) => {
   Category.find({ name: req.body.name })
     .then(category => {
       if (category.length >= 1) {
@@ -71,10 +71,9 @@ router.post("/add", checkAuth, (req, res, next) => {
     .catch(err => {
       console.log(err);
     });
-});
+};
 
-// delete a category (protected route)
-router.delete("/:name", checkAuth, async (req, res) => {
+exports.categories_delete_exist_one = async (req, res) => {
   try {
     const removeCategory = await Category.deleteOne({ name: req.params.name });
     res.json({
@@ -91,10 +90,9 @@ router.delete("/:name", checkAuth, async (req, res) => {
       }
     });
   }
-});
+};
 
-// update a category (protected route)
-router.post("/update", checkAuth, (req, res, next) => {
+exports.categories_update_exist_one = (req, res, next) => {
   Category.find({ _id: req.body._id }, async () => {
     try {
       const updateCategory = await Category.updateOne(
@@ -116,6 +114,4 @@ router.post("/update", checkAuth, (req, res, next) => {
       });
     }
   });
-});
-
-module.exports = router;
+};

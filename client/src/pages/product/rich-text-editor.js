@@ -5,7 +5,10 @@ import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from 'html-to-draftjs';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import storageUtils from "../../utils/storageUtils";
 import { BASE } from '../../utils/constants';
+
+const token = storageUtils.getToken();
 
 class RichTextEditor extends Component {
   constructor(props) {
@@ -43,8 +46,8 @@ class RichTextEditor extends Component {
     return new Promise(
       (resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', `${BASE}/product/profile-img-upload`);
-        xhr.setRequestHeader('Authorization', 'Client-ID XXXXX');
+        xhr.open('POST', `${BASE}/image-upload`);
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
         const data = new FormData();
         data.append('profileImage', file);
         xhr.send(data);

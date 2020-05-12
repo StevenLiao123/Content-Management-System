@@ -15,20 +15,24 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // get the route of user
-const userRoute = require('./routes/user');
-app.use('/data/user', userRoute);
+const userRoute = require('./routes/users');
+app.use('/api/user', userRoute);
 
 // get the route of category
-const categoryRoute = require('./routes/category');
-app.use('/data/category', categoryRoute);
+const categoryRoute = require('./routes/categories');
+app.use('/api/category', categoryRoute);
 
 // get the route of product
-const productRoute = require('./routes/product');
-app.use('/data/product', productRoute);
+const productRoute = require('./routes/products');
+app.use('/api/product', productRoute);
 
 // get the route of role
-const roleRoute = require('./routes/role');
-app.use('/data/role', roleRoute);
+const roleRoute = require('./routes/roles');
+app.use('/api/role', roleRoute);
+
+// get the route of image upload
+const imageUploadRoute = require('./routes/image-upload');
+app.use('/api/image-upload', imageUploadRoute);
 
 //Connect to DB
 mongoose.set('useUnifiedTopology', true);

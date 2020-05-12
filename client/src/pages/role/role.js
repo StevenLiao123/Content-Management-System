@@ -49,12 +49,17 @@ class Role extends Component {
 
   getRoles = async () => {
     const result = await reqRoles();
-    if (result) {
+    console.log(result);
+    if (result.data.status === "1") {
       const roles = result.data.roles;
       this.setState({
         roles
       });
-    }
+    } else if (result.data.status === "0") {
+      memoryUtils.user = {};
+      memoryUtils.token = "";
+      this.props.logout();
+    } 
   };
 
   onRow = role => {

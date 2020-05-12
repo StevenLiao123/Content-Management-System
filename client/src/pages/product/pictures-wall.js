@@ -99,7 +99,7 @@ class PicturesWall extends React.Component {
     return (
       <div className="clearfix">
         <Upload
-          action={`${BASE}/product/profile-img-upload`}
+          action={`${BASE}/image-upload`}
           headers={{
             Authorization: `Bearer ${this.props.token}`
           }}

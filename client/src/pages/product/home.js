@@ -115,23 +115,25 @@ class ProductHome extends Component {
     const { searchName, searchType } = this.state;
 
     // get products based on name or description
-    let results;
+    let result;
     if (searchType === "name") {
-      results = await reqSearchProdcutsByName(searchName);
+      result = await reqSearchProdcutsByName(searchName);
     } else if (searchType === "description") {
-      results = await reqSearchProdcutsByDescription(searchName);
+      result = await reqSearchProdcutsByDescription(searchName);
     } else {
-      results = await reqProducts();
+      result = await reqProducts();
     }
 
     // get the products and update the state and then display the
     this.setState({ loading: false });
-    if (results) {
+    if (result.data.status === "1") {
       this.setState({
-        products: results.data.products
+        products: result.data.products
       });
-    } else {
-      message.error("failed to get products!");
+    } else if (result.data.status === "0") {
+      memoryUtils.user = {};
+      memoryUtils.token = "";
+      this.props.logout();
     }
   };
 

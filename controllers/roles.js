@@ -1,15 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const User = require("../models/user");
 const Role = require("../models/role");
-const checkAuth = require('../middleware/check-auth');
 
-// get back all roles
-router.get("/", async (req, res) => {
+exports.roles_get_all = async (req, res) => {
   try {
     const roles = await Role.find();
     res.json({
       data: {
+        status: "1",
         roles
       }
     });
@@ -20,10 +16,9 @@ router.get("/", async (req, res) => {
       }
     });
   }
-});
+};
 
-// Create a new role (protected route)
-router.post("/add", checkAuth, (req, res, next) => {
+exports.roles_add_new_one = (req, res, next) => {
   Role.find({ name: req.body.name })
     .then(role => {
       if (role.length >= 1) {
@@ -64,10 +59,9 @@ router.post("/add", checkAuth, (req, res, next) => {
     .catch(err => {
       console.log(err);
     });
-});
+};
 
-// update a role (protected route)
-router.post("/update", checkAuth, (req, res, next) => {
+exports.roles_update_exist_one = (req, res, next) => {
   Role.find({ _id: req.body._id }, async () => {
     try {
       const updateRole = await Role.updateMany(
@@ -94,6 +88,4 @@ router.post("/update", checkAuth, (req, res, next) => {
       });
     }
   });
-});
-
-module.exports = router;
+};

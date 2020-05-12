@@ -123,14 +123,18 @@ class User extends Component {
 
   getUsers = async () => {
     const result = await reqUsers();
-    if(result) {
-        const { users, roles } = result.data;
-        this.initRoleNames(roles);
-        this.setState({
-            users,
-            roles
-        });
-    }   
+    if (result.data.status === "1") {
+      const { users, roles } = result.data;
+      this.initRoleNames(roles);
+      this.setState({
+          users,
+          roles
+      });
+    } else if (result.data.status === "0") {
+      memoryUtils.user = {};
+      memoryUtils.token = "";
+      this.props.logout();
+    } 
   }
 
   UNSAFE_componentWillMount() {

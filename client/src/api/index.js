@@ -43,13 +43,13 @@ export const reqUpdateProdcut = (_id, name, description, price, images, detail) 
 export const reqUpdateProdcutsStatus = (_id, status) => ajax(BASE + '/product/update/status', {_id, status}, 'POST');
 
 // delete an object on S3
-export const reqDeleteImage = (imageName) => ajax(BASE + '/product/profile-img-upload/delete', {imageName}, 'POST');
+export const reqDeleteImage = (imageName) => ajax(BASE + '/image-upload/delete', {imageName}, 'POST');
 
 // delete a product
 export const reqDeleteProduct = (_id) => ajax(BASE + '/product/delete', {_id}, 'POST');
 
 // get a list of roles
-export const reqRoles = () => ajax(BASE + '/role');
+export const reqRoles = () => ajax(BASE + '/role', {}, 'GET');
 
 // add a role
 export const reqAddRole = (name) => ajax(BASE + '/role/add', {name}, 'POST');
@@ -57,9 +57,8 @@ export const reqAddRole = (name) => ajax(BASE + '/role/add', {name}, 'POST');
 // update a role
 export const reqUpdateRole = (role) => ajax(BASE + '/role/update', role, 'POST');
 
-
 // get a list of users
-export const reqUsers = () => ajax(BASE + '/user');
+export const reqUsers = () => ajax(BASE + '/user', {}, "GET");
 
 // delete an user
 export const reqDeleteUser = (_id) => ajax(BASE + '/user/delete', {_id}, 'POST');

@@ -1,18 +1,15 @@
-const express = require("express");
-const router = express.Router();
 const User = require("../models/user");
 const Role = require("../models/role");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const checkAuth = require("../middleware/check-auth");
 
-// GET BACK ALL THE USERS
-router.get("/", async (req, res) => {
+exports.users_get_all = async (req, res) => {
   try {
     const users = await User.find();
     const roles = await Role.find();
     res.json({
       data: {
+        status: "1",
         users,
         roles
       }
@@ -24,10 +21,118 @@ router.get("/", async (req, res) => {
       }
     });
   }
-});
+};
 
-// Create a new user
-router.post("/signup", (req, res, next) => {
+exports.users_add_new_one = (req, res, next) => {
+  bcrypt.hash(req.body.password, 10, (err, hash) => {
+    User.find({ username: req.body.username })
+      .then(async user => {
+        if (user.length >= 1) {
+          return res.status(409).json({
+            message: "This user has already been created!"
+          });
+        } else {
+          const user = new User({
+            username: req.body.username,
+            password: hash,
+            email: req.body.email,
+            phone: req.body.phone,
+            role: await Role.find({ _id: req.body.role_id }),
+            role_id: req.body.role_id,
+            create_time: Date.now()
+          });
+
+          user
+            .save()
+            .then(async user => {
+              res.status(201).json({
+                data: {
+                  status: "1",
+                  user,
+                  message: "User added!"
+                }
+              });
+            })
+            .catch(err => {
+              res.status(500).json({
+                data: {
+                  message: err
+                }
+              });
+            });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  });
+};
+
+exports.users_find_specific_one = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.postId);
+    res.json(user);
+  } catch (err) {
+    res.json({
+      data: {
+        message: err
+      }
+    });
+  }
+};
+
+exports.users_delete_exist_one = async (req, res) => {
+  try {
+    const removeUser = await User.deleteOne({ _id: req.body._id });
+    res.json({
+      data: {
+        status: "1",
+        message: "User deleted!",
+        removeUser
+      }
+    });
+  } catch (err) {
+    res.json({
+      data: {
+        message: err
+      }
+    });
+  }
+};
+
+exports.users_update_exist_one = (req, res, next) => {
+  Role.find({ _id: req.body._id }, async () => {
+    try {
+      const updateUser = await User.updateMany(
+        { _id: req.body._id },
+        {
+          $set: {
+            username: req.body.username,
+            phone: req.body.phone,
+            email: req.body.email,
+            role: await Role.find({ _id: req.body.role_id }),
+            role_id: req.body.role_id
+          }
+        }
+      );
+      res.json({
+        data: {
+          status: "1",
+          message: "Update user sccuessful!",
+          updateUser
+        }
+      });
+    } catch (err) {
+      res.json({
+        data: {
+          message: err
+        }
+      });
+    }
+  });
+};
+
+exports.users_sign_up = (req, res, next) => {
   bcrypt.hash(req.body.password, 10, (err, hash) => {
     User.find({ username: req.body.username }).then(async user => {
       if (user.length >= 1) {
@@ -75,10 +180,9 @@ router.post("/signup", (req, res, next) => {
       }
     });
   });
-});
+};
 
-// login
-router.post("/login", (req, res, next) => {
+exports.users_login_in = (req, res, next) => {
   User.find({ username: req.body.username })
     .then(user => {
       if (user.length < 1) {
@@ -144,119 +248,4 @@ router.post("/login", (req, res, next) => {
         }
       });
     });
-});
-
-// Add a new role (protected route)
-router.post("/add", checkAuth, (req, res, next) => {
-  bcrypt.hash(req.body.password, 10, (err, hash) => {
-    User.find({ username: req.body.username })
-      .then(async user => {
-        if (user.length >= 1) {
-          return res.status(409).json({
-            message: "This user has already been created!"
-          });
-        } else {
-          const user = new User({
-            username: req.body.username,
-            password: hash,
-            email: req.body.email,
-            phone: req.body.phone,
-            role: await Role.find({ _id: req.body.role_id }),
-            role_id: req.body.role_id,
-            create_time: Date.now()
-          });
-
-          user
-            .save()
-            .then(async user => {
-              res.status(201).json({
-                data: {
-                  status: "1",
-                  user,
-                  message: "User added!"
-                }
-              });
-            })
-            .catch(err => {
-              res.status(500).json({
-                data: {
-                  message: err
-                }
-              });
-            });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  });
-});
-
-//SPECIFIC USER
-router.get("/:postId", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.postId);
-    res.json(user);
-  } catch (err) {
-    res.json({
-      data: {
-        message: err
-      }
-    });
-  }
-});
-
-//DELETE USER (protected route)
-router.post("/delete", checkAuth, async (req, res) => {
-  try {
-    const removeUser = await User.deleteOne({ _id: req.body._id });
-    res.json({
-      data: {
-        status: "1",
-        message: "User deleted!",
-        removeUser
-      }
-    });
-  } catch (err) {
-    res.json({
-      data: {
-        message: err
-      }
-    });
-  }
-});
-
-// update an user (protected route)
-router.post("/update", checkAuth, (req, res, next) => {
-  Role.find({ _id: req.body._id }, async () => {
-    try {
-      const updateUser = await User.updateMany(
-        { _id: req.body._id },
-        {
-          $set: {
-            username: req.body.username,
-            phone: req.body.phone,
-            email: req.body.email,
-            role: await Role.find({ _id: req.body.role_id }),
-            role_id: req.body.role_id
-          }
-        }
-      );
-      res.json({
-        data: {
-          status: "1",
-          message: "Update user sccuessful!",
-          updateUser
-        }
-      });
-    } catch (err) {
-      res.json({
-        data: {
-          message: err
-        }
-      });
-    }
-  });
-});
-
-module.exports = router;
+};
